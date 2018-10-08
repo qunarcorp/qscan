@@ -1,0 +1,20 @@
+{
+  "name": "qscan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "bin": {
+    "qscan": "./bin/qscan"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache 2.0",
+  "dependencies": {
+    "async": "^2.6.1",
+    "commander": "^2.18.0",
+    "queue": "^4.5.0",
+    "wd": "^1.10.3"
+  }
+}
