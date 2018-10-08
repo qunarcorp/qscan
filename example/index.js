@@ -17,5 +17,5 @@ scan.run({
     modelName: 'wx-default',
     type: 'ide-login-scan'
 }, (err) => {
-    
+    console.log(err);
 });

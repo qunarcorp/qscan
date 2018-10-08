@@ -23,6 +23,7 @@ const DEFAULT_MODEL_OPTS_PATH = path.join(process.env['HOME'], '.qscanrc');
 
 class QScan extends EventEmitter {
     constructor({customModel, modelOpts}) {
+        super();
         // Models
         this.models = {};
         // 队列
@@ -38,7 +39,7 @@ class QScan extends EventEmitter {
             modelOpts = {};
         }
         // 读取默认的 Model
-        fs.readdirSync(DEFAULT_MODEL_PATH, (file) => this.loadModelFile({
+        fs.readdirSync(DEFAULT_MODEL_PATH).forEach((file) => this.__loadModelFile({
             modelFilePath: path.join(DEFAULT_MODEL_PATH, file),
             modelOpts
         }));
@@ -103,7 +104,7 @@ class QScan extends EventEmitter {
             this.queues[modelName] = new Queue(QUEUE_OPTS);
         }
         this.queues[modelName].push((callback) => {
-            __handleDevice({modelName, type, reset: false}, (err) => {
+            this.__handleDevice({modelName, type, reset: false}, (err) => {
                 cb(err);
                 callback();
             });
