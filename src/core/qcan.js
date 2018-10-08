@@ -109,6 +109,9 @@ class QScan extends EventEmitter {
             });
         });
     }
+    clone({newModelName, oldModelName, opts}) {
+         this.models[newModelName] = Object.assign({}, this.models[oldModelName] || {}, {opts});
+    }
     __loadModelFile({modelFilePath, modelOpts}) {
         const model = require(modelFilePath);
         const opts = modelOpts[model.name || 'default'] || {};
