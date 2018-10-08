@@ -1,5 +1,5 @@
 module.exports = {
-    // Model Name
+    // Model Name 默认的微信的配置
     name: 'wx-default',
     // 参数，包括用户名，密码等
     opts: {},
@@ -8,12 +8,14 @@ module.exports = {
         platformName: 'Android',
         deviceName: 'Android',
         appPackage: 'com.tencent.mm',
+        appActivity: '.ui.LauncherUI'
     },
     // 等待超时时间
     waitTimeout: 3000,
-    // 检查 App 是否是相应的版本等
+    // 检查 App 是否是相应的版本等 
     checkApp: (cb) => {
         const version = '6.7.0';
+        // TODO
         setTimeout(() => {
             cb(null, true);
         }, 100);

@@ -1,4 +1,5 @@
 const QScan = require('../src/index');
+
 const scan = new QScan({
     modelOpts: {
         'wx-default': {

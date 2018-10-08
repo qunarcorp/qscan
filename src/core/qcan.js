@@ -27,7 +27,7 @@ class QScan extends EventEmitter {
         this.models = {};
         // 队列
         this.queues = {};
-        // 读取配置
+        // 读取配置 默认从 ~/.qscanrc 读取，也可以传进来
         if (modelOpts) {
             if (typeof modelOpts === 'string' && fs.existsSync(modelOpts)) {
                 modelOpts = JSON.parse(fs.readFileSync(modelOpts, 'UTF-8'));
@@ -42,7 +42,7 @@ class QScan extends EventEmitter {
             modelFilePath: path.join(DEFAULT_MODEL_PATH, file),
             modelOpts
         }));
-        // 读取自定义 model
+        // 读取自定义 model，可以从指定目录读取，或者直接传入对象(key-value)或数组
         if (customModel) {
             if (typeof customModel === 'string' && fs.existsSync(customModel)) {
                 fs.readdirSync(customModel, (file) => this.__loadModelFile({
@@ -61,6 +61,7 @@ class QScan extends EventEmitter {
             }
         }
     }
+    // 检查环境
     doctor(modelName, cb) {
         const tasks = [];
         tasks.push((cb) => {

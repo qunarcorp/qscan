@@ -21,6 +21,6 @@ fs.readdirSync(path.join(__dirname, './commands')).forEach(file => {
 
 prog.parse(process.argv);
 
-if (!program.args.length) {
-    program.help();
+if (!prog.args.length) {
+    prog.help();
 }
