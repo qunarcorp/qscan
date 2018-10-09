@@ -151,15 +151,17 @@ class QScan extends EventEmitter {
                     } else if (reset) {
                         model.types[type](this.__initModel(model, true), model.opts).catch((e) => {
                             cb(e);
-                        }).finnally(() => {
+                        }).finally(() => {
                             cb(null);
                         });
                     } else {
                         this.__checkStatus(model, (err, flag) => {
                             if (!err && flag) {
+                                console.log('nodel types type', model.types[type]);
+
                                 model.types[type](this.__initModel(model, false), model.opts).catch((e) => {
                                     cb(e);
-                                }).finnally(() => {
+                                }).finally(() => {
                                     cb(null);
                                 });
                             } else {
