@@ -24,7 +24,7 @@ const DEFAULT_MODEL_OPTS_PATH = path.join(process.env['HOME'], '.qscanrc');
 class QScan extends EventEmitter {
     constructor({customModel, modelOpts}) {
         super();
-        // Models
+        // Models 
         this.models = {};
         // 队列
         this.queues = {};
@@ -111,7 +111,7 @@ class QScan extends EventEmitter {
         });
     }
     clone({newModelName, oldModelName, opts}) {
-         this.models[newModelName] = Object.assign({}, this.models[oldModelName] || {}, {opts});
+        this.models[newModelName] = Object.assign({}, this.models[oldModelName] || {}, {opts});
     }
     __loadModelFile({modelFilePath, modelOpts}) {
         const model = require(modelFilePath);
@@ -122,7 +122,7 @@ class QScan extends EventEmitter {
         });
     }
     __connectAppium(model, cb) {
-        //TODO Connect for Start Appium
+        // TODO Connect for Start Appium
         setTimeout(() => {
             cb(null);
         }, 100);
@@ -130,7 +130,7 @@ class QScan extends EventEmitter {
     __initConnect(model, reset) {
         return wd.promiseChainRemote({
             host: LOCAL_HOST,
-            port: model.port, 
+            port: model.port
         }).init(Object.assign({}, model.connectOpt, {
             noReset: !reset
         })).setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
@@ -157,8 +157,6 @@ class QScan extends EventEmitter {
                     } else {
                         this.__checkStatus(model, (err, flag) => {
                             if (!err && flag) {
-                                console.log('nodel types type', model.types[type]);
-
                                 model.types[type](this.__initModel(model, false), model.opts).catch((e) => {
                                     cb(e);
                                 }).finally(() => {
