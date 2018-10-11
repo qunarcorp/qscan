@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const wd = require('wd');
 const async = require('async');
+const applescript = require('applescript');
+const shelljs = require('shelljs');
 
 const Queue = require('queue');
 const EventEmitter = require('events').EventEmitter;
@@ -22,9 +24,9 @@ const DEFAULT_MODEL_PATH = path.join(__dirname, '../models');
 const DEFAULT_MODEL_OPTS_PATH = path.join(process.env['HOME'], '.qscanrc');
 
 class QScan extends EventEmitter {
-    constructor({customModel, modelOpts}) {
+    constructor({ customModel, modelOpts }) {
         super();
-        // Models 
+        // Models
         this.models = {};
         // 队列
         this.queues = {};
@@ -34,24 +36,30 @@ class QScan extends EventEmitter {
                 modelOpts = JSON.parse(fs.readFileSync(modelOpts, 'UTF-8'));
             }
         } else if (fs.existsSync(DEFAULT_MODEL_OPTS_PATH)) {
-            modelOpts = JSON.parse(fs.readFileSync(DEFAULT_MODEL_OPTS_PATH, 'UTF-8'));
+            modelOpts = JSON.parse(
+                fs.readFileSync(DEFAULT_MODEL_OPTS_PATH, 'UTF-8')
+            );
         } else {
             modelOpts = {};
         }
         // 读取默认的 Model
-        fs.readdirSync(DEFAULT_MODEL_PATH).forEach((file) => this.__loadModelFile({
-            modelFilePath: path.join(DEFAULT_MODEL_PATH, file),
-            modelOpts
-        }));
+        fs.readdirSync(DEFAULT_MODEL_PATH).forEach(file =>
+            this.__loadModelFile({
+                modelFilePath: path.join(DEFAULT_MODEL_PATH, file),
+                modelOpts
+            })
+        );
         // 读取自定义 model，可以从指定目录读取，或者直接传入对象(key-value)或数组
         if (customModel) {
             if (typeof customModel === 'string' && fs.existsSync(customModel)) {
-                fs.readdirSync(customModel, (file) => this.__loadModelFile({
-                    modelFilePath: path.join(customModel, file),
-                    modelOpts
-                }));
+                fs.readdirSync(customModel, file =>
+                    this.__loadModelFile({
+                        modelFilePath: path.join(customModel, file),
+                        modelOpts
+                    })
+                );
             } else {
-                Object.keys(customModel).forEach((key) => {
+                Object.keys(customModel).forEach(key => {
                     const model = customModel[key];
                     const opts = modelOpts[model.name || 'default'] || {};
                     this.loadModel({
@@ -64,30 +72,31 @@ class QScan extends EventEmitter {
     }
     // 检查环境
     doctor(modelName, cb) {
+        cb();
         const tasks = [];
-        tasks.push((cb) => {
+        tasks.push(cb => {
             // TODO Check Appium
         });
         if (modelName && this.models[modelName]) {
             const model = this.models[modelName];
             if (model.udid) {
-                tasks.push((cb) => {
+                tasks.push(cb => {
                     // TODO Check Devices
                     // model.udid
                 });
             }
             if (model.port) {
-                tasks.push((cb) => {
+                tasks.push(cb => {
                     // TODO Check Appium Process
                 });
             }
             if (model.checkApp) {
-                tasks.push((cb) => model.checkApp(cb));
+                tasks.push(cb => model.checkApp(cb));
             }
         }
         async.series(tasks, cb);
     }
-    loadModel({model, udid, port, opts}) {
+    loadModel({ model, udid, port, opts }) {
         if (udid) {
             model.udid = model.connectOpt.udid = udid;
         }
@@ -99,21 +108,25 @@ class QScan extends EventEmitter {
         }
         this.models[model.name] = model;
     }
-    run({modelName, type}, cb) {
+    run({ modelName, type }, cb) {
         if (!this.queues[modelName]) {
             this.queues[modelName] = new Queue(QUEUE_OPTS);
         }
-        this.queues[modelName].push((callback) => {
-            this.__handleDevice({modelName, type, reset: false}, (err) => {
+        this.queues[modelName].push(callback => {
+            this.__handleDevice({ modelName, type }, err => {
                 cb(err);
                 callback();
             });
         });
     }
-    clone({newModelName, oldModelName, opts}) {
-        this.models[newModelName] = Object.assign({}, this.models[oldModelName] || {}, {opts});
+    clone({ newModelName, oldModelName, opts }) {
+        this.models[newModelName] = Object.assign(
+            {},
+            this.models[oldModelName] || {},
+            { opts }
+        );
     }
-    __loadModelFile({modelFilePath, modelOpts}) {
+    __loadModelFile({ modelFilePath, modelOpts }) {
         const model = require(modelFilePath);
         const opts = modelOpts[model.name || 'default'] || {};
         this.loadModel({
@@ -122,48 +135,73 @@ class QScan extends EventEmitter {
         });
     }
     __connectAppium(model, cb) {
-        // TODO Connect for Start Appium
-        setTimeout(() => {
-            cb(null);
-        }, 100);
+        const { port, uuid } = model;
+
+        const APPIUM_CLI = shelljs
+            .exec('which appium', {
+                silent: true
+            })
+            .stdout.replace('\n', '');
+
+        const script = `tell application "Terminal"
+                            activate
+                            do script ("${APPIUM_CLI} -p ${port} -U ${uuid}")
+                        end tell`;
+
+        applescript.execString(script, function(err) {
+            if (err) {
+                throw err;
+            }
+
+            cb();
+        });
     }
-    __initConnect(model, reset) {
-        return wd.promiseChainRemote({
-            host: LOCAL_HOST,
-            port: model.port
-        }).init(Object.assign({}, model.connectOpt, {
-            noReset: !reset
-        })).setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
+    __initConnect(model) {
+        return wd
+            .promiseChainRemote({
+                host: LOCAL_HOST,
+                port: model.port
+            })
+            .init(model.connectOpt)
+            .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
     }
-    __initModel(model, reset) {
-        return model.init(this.__initConnect(model, reset));
+    __initModel(model) {
+        return model.init(this.__initConnect(model), model.opts);
     }
     __checkStatus(model, cb) {
         model.checkStatus(this.__initConnect(model), model.opts, cb);
     }
-    __handleDevice({modelName, type, reset}, cb) {
+    __handleDevice({ modelName, type }, cb) {
         const model = this.models[modelName];
         if (model) {
             if (model.types && model.types[type]) {
-                this.__connectAppium(model, (err) => {
+                // 检测运行环境
+                this.doctor(modelName, err => {
                     if (err) {
-                        cb(err);
-                    } else if (reset) {
-                        model.types[type](this.__initModel(model, true), model.opts).catch((e) => {
-                            cb(e);
-                        }).finally(() => {
-                            cb(null);
-                        });
+                        // 启动appium
+                        this.__connectAppium(
+                            model,
+                            this.__handleDevice({ modelName, type }, cb)
+                        );
                     } else {
-                        this.__checkStatus(model, (err, flag) => {
-                            if (!err && flag) {
-                                model.types[type](this.__initModel(model, false), model.opts).catch((e) => {
-                                    cb(e);
-                                }).finally(() => {
-                                    cb(null);
-                                });
+                        // 检测登录状态
+                        this.__checkStatus(model, (err, flag, app) => {
+                            if (!err) {
+                                if (flag) {
+                                    // 可以直接扫码
+                                    model.types[type](app, model.opts, cb);
+                                } else {
+                                    // 重新登录并扫码
+                                    model.types[type](
+                                        this.__initModel(model),
+                                        model.opts,
+                                        cb
+                                    );
+                                }
                             } else {
-                                this.__handleDevice({modelName, type, reset: true}, cb);
+                                // 尝试再检测
+                                console.log(err);
+                                this.__handleDevice({ modelName, type }, cb);
                             }
                         });
                     }
@@ -178,4 +216,3 @@ class QScan extends EventEmitter {
 }
 
 module.exports = QScan;
-
