@@ -6,7 +6,7 @@ module.exports = {
     // Appium 连接参数
     connectOpt: {
         platformName: 'Android',
-        deviceName: 'Android',
+        deviceName: '7PTS4TDAGM9DLNEU',
         appPackage: 'com.tencent.mm',
         appActivity: '.ui.LauncherUI'
     },

@@ -5,7 +5,7 @@ const async = require('async');
 
 const Queue = require('queue');
 const EventEmitter = require('events').EventEmitter;
-
+const shelljs = require('shelljs');
 // 本地 Host
 const LOCAL_HOST = '127.0.0.1';
 // 默认的等待时间
@@ -20,6 +20,10 @@ const QUEUE_OPTS = {
 const DEFAULT_MODEL_PATH = path.join(__dirname, '../models');
 // 默认的配置文件路径
 const DEFAULT_MODEL_OPTS_PATH = path.join(process.env['HOME'], '.qscanrc');
+
+const INDEX_LOGIN_BTN_ID = 'com.tencent.mm:id/d75'; // 首页登录按钮
+const MORE_BTN_XPATH = '//android.widget.RelativeLayout[@content-desc="更多功能按钮"]'; // 右上角更多 "+" 按钮
+const SCAN_BTN_XPATH = '//android.widget.ListView/android.widget.LinearLayout[3]/android.widget.LinearLayout[1]'; // 扫一扫按钮
 
 class QScan extends EventEmitter {
     constructor({customModel, modelOpts}) {
@@ -38,6 +42,7 @@ class QScan extends EventEmitter {
         } else {
             modelOpts = {};
         }
+        
         // 读取默认的 Model
         fs.readdirSync(DEFAULT_MODEL_PATH).forEach((file) => this.__loadModelFile({
             modelFilePath: path.join(DEFAULT_MODEL_PATH, file),
@@ -67,6 +72,12 @@ class QScan extends EventEmitter {
         const tasks = [];
         tasks.push((cb) => {
             // TODO Check Appium
+            if(!shelljs.exec('ps | grep "appium"', {
+                stdio: 'inherit'
+            }).stdout.split('\n').filter(item => item.includes('node')).length) {
+               console.log('appium 没有启动');
+               cb('appium没有启动');
+            }
         });
         if (modelName && this.models[modelName]) {
             const model = this.models[modelName];
@@ -74,11 +85,23 @@ class QScan extends EventEmitter {
                 tasks.push((cb) => {
                     // TODO Check Devices
                     // model.udid
+                    if(!shelljs.exec('adb shell pm dump com.tencent.mm | grep "versionName"').stdout.split('\n').some( uid =>  uid === model.udid)) {
+                        cb(`没有找到设备${model.udid}`);
+                    }
                 });
             }
             if (model.port) {
                 tasks.push((cb) => {
                     // TODO Check Appium Process
+                    if(!shelljs.exec('ps | grep "appium -p"').stdout.split('\n').some(pid => {
+                        let pres = pid.match(/[-p]{1} [0-9]+/);
+                        if(pres) {
+                            return pres[0].split(' ')[1] === model.port;
+                        }
+                        return false;
+                    })) {
+                        cb('appium启动端口不对应');
+                    }
                 });
             }
             if (model.checkApp) {
@@ -109,6 +132,7 @@ class QScan extends EventEmitter {
                 callback();
             });
         });
+        
     }
     clone({newModelName, oldModelName, opts}) {
         this.models[newModelName] = Object.assign({}, this.models[oldModelName] || {}, {opts});
@@ -123,11 +147,15 @@ class QScan extends EventEmitter {
     }
     __connectAppium(model, cb) {
         // TODO Connect for Start Appium
+        console.log('__connectAppium');
+        
         setTimeout(() => {
             cb(null);
         }, 100);
     }
     __initConnect(model, reset) {
+        console.log('__initConnect');
+        // connect appium serever
         return wd.promiseChainRemote({
             host: LOCAL_HOST,
             port: model.port
@@ -136,9 +164,15 @@ class QScan extends EventEmitter {
         })).setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
     }
     __initModel(model, reset) {
+        console.log('__initModel');
         return model.init(this.__initConnect(model, reset));
     }
     __checkStatus(model, cb) {
+        console.log('__checkStatus');
+        let init = this.__initConnect(model);
+        console.log('init', init);   
+        console.log('!!!!!!init  click after');
+
         model.checkStatus(this.__initConnect(model), model.opts, cb);
     }
     __handleDevice({modelName, type, reset}, cb) {
@@ -146,7 +180,9 @@ class QScan extends EventEmitter {
         if (model) {
             if (model.types && model.types[type]) {
                 this.__connectAppium(model, (err) => {
+                    
                     if (err) {
+                        console.log('connect appium error', err);
                         cb(err);
                     } else if (reset) {
                         model.types[type](this.__initModel(model, true), model.opts).catch((e) => {
@@ -156,6 +192,7 @@ class QScan extends EventEmitter {
                         });
                     } else {
                         this.__checkStatus(model, (err, flag) => {
+                            console.log('__checkStatus cb err &flag', err, flag);
                             if (!err && flag) {
                                 model.types[type](this.__initModel(model, false), model.opts).catch((e) => {
                                     cb(e);
