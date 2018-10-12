@@ -15,7 +15,6 @@ fs.readdirSync(path.join(__dirname, './commands')).forEach(file => {
             .usage(cmd.usage)
             .description(cmd.description)
             .action(cmd.action);
-        
     }
 });
 

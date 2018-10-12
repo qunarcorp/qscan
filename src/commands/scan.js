@@ -9,6 +9,6 @@ module.exports = {
         '-d, --device': '指定设备的 UDID'
     },
     action: (rc, options) => {
-        
+
     }
 };
