@@ -12,7 +12,7 @@ module.exports = {
     },
     // 等待超时时间
     waitTimeout: 3000,
-    // 检查 App 是否是相应的版本等 
+    // 检查 App 是否是相应的版本等
     checkApp: (cb) => {
         const version = '6.7.0';
         // TODO

@@ -24,7 +24,7 @@ const DEFAULT_MODEL_OPTS_PATH = path.join(process.env['HOME'], '.qscanrc');
 class QScan extends EventEmitter {
     constructor({customModel, modelOpts}) {
         super();
-        // Models 
+        // Models
         this.models = {};
         // 队列
         this.queues = {};
