@@ -1,48 +1,51 @@
 {
-  "name": "qscan",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.js",
-  "bin": {
-    "qscan": "./bin/qscan"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "Apache 2.0",
-  "dependencies": {
-    "async": "^2.6.1",
-    "commander": "^2.18.0",
-    "queue": "^4.5.0",
-    "wd": "^1.10.3"
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.6.1",
-    "eslint-plugin-html": "^4.0.6",
-    "ghooks": "^2.0.4",
-    "validate-commit-msg": "^2.14.0"
-  },
-  "config": {
-    "ghooks": {
-      "commit-msg": "validate-commit-msg"
+    "name": "qscan",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.js",
+    "bin": {
+        "qscan": "./bin/qscan"
     },
-    "validate-commit-msg": {
-      "types": [
-        "feat",
-        "fix",
-        "docs",
-        "test",
-        "chore",
-        "refactor",
-        "opti"
-      ],
-      "warnOnFail": false,
-      "maxSubjectLength": 100,
-      "subjectPattern": ".+",
-      "subjectPatternErrorMsg": "请输入 message 信息!",
-      "helpMessage": "Commit message 格式错误, \n请查看规范: http://wiki.corp.qunar.com/pages/viewpage.action?pageId=159698767"
-    }
-  }
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "Apache 2.0",
+    "dependencies": {
+        "async": "^2.6.1",
+        "commander": "^2.18.0",
+        "queue": "^4.5.0",
+        "wd": "^1.10.3",
+        "shelljs": "^0.8.2",
+        "applescript": "^1.0.0"
+    },
+    "devDependencies": {
+        "babel-eslint": "^10.0.1",
+        "eslint": "^5.6.1",
+        "eslint-plugin-html": "^4.0.6",
+        "ghooks": "^2.0.4",
+        "validate-commit-msg": "^2.14.0"
+    },
+    "config": {
+        "ghooks": {
+            "commit-msg": "validate-commit-msg"
+        },
+        "validate-commit-msg": {
+            "types": [
+                "feat",
+                "fix",
+                "docs",
+                "test",
+                "chore",
+                "refactor",
+                "opti"
+            ],
+            "warnOnFail": false,
+            "maxSubjectLength": 100,
+            "subjectPattern": ".+",
+            "subjectPatternErrorMsg": "请输入 message 信息!",
+            "helpMessage": "Commit message 格式错误, \n请查看规范: http://wiki.corp.qunar.com/pages/viewpage.action?pageId=159698767"
+        }
+    },
+    "support_wx_version": "6.7.2"
 }

@@ -1,5 +1,6 @@
 {
   "eslint.options": {
     "configFile": "/Users/qitmac000310/git/qscan/.eslintrc.json"
-  }
+  },
+  "prettier.tabWidth": 4
 }
