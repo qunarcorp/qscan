@@ -65,6 +65,8 @@ module.exports = {
                         el.click();
                     }
                 })
+                .setImplicitWaitTimeout(waitTimeout)
+                .waitForElementByXPath(CONST.TAB_1.xpath)
         );
     },
     // 检查状态是否正确，包括登录的用户是指定用户等
@@ -116,8 +118,6 @@ module.exports = {
                 .waitForElementByXPath(CONST.MP_AFTER_SCAN.xpath)
                 .click()
                 .catch(e => {
-                    // 未知原因 尝试重置App解决
-                    app.resetApp();
                     cb(e);
                 })
                 .finally(() => {
@@ -136,8 +136,6 @@ module.exports = {
                 .waitForElementByXPath(CONST.IDE_AFTER_SCAN.xpath)
                 .click()
                 .catch(e => {
-                    // 未知原因 尝试重置App解决
-                    app.resetApp();
                     cb(e);
                 })
                 .finally(() => {
