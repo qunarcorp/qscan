@@ -6,18 +6,18 @@ const customModel = {
 
 };
 const modelOpts = {
-  name: 'wx-default',
-  type: 'ide-login-scan',
-  udid: '3HX0217705004280',
-  port: '4723',
-  opts: {
-    user: 'socutur',
-    pass: 'Wangle539264'
+  'wx-default': {
+    udid: '3HX0217705004280',
+    port: '4723',
+    opts: {
+      user: 'socutur',
+      pass: 'Wangle539264'
+    }
   }
 }
 
 app.use(QScan.middleWare({
-  customModel: null,
+  customModel: 'wx-default',
   modelOpts
 }));
 
