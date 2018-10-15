@@ -44,22 +44,24 @@ class QScan extends EventEmitter {
 
         // 读取默认的 Model
         fs.readdirSync(DEFAULT_MODEL_PATH).forEach(file => {
-            if (file.indexOf('.js') < 0) return;
-
-            this.__loadModelFile({
-                modelFilePath: path.join(DEFAULT_MODEL_PATH, file),
-                modelOpts
-            });
+            if (path.extname(file) === '.js') {
+                this.__loadModelFile({
+                    modelFilePath: path.join(DEFAULT_MODEL_PATH, file),
+                    modelOpts
+                });
+            }
         });
         // 读取自定义 model，可以从指定目录读取，或者直接传入对象(key-value)或数组
         if (customModel) {
             if (typeof customModel === 'string' && fs.existsSync(customModel)) {
-                fs.readdirSync(customModel, file =>
-                    this.__loadModelFile({
-                        modelFilePath: path.join(customModel, file),
-                        modelOpts
-                    })
-                );
+                fs.readdirSync(customModel, file => {
+                    if (path.extname(file) === '.js') {
+                        this.__loadModelFile({
+                            modelFilePath: path.join(customModel, file),
+                            modelOpts
+                        })
+                    }
+                });
             } else {
                 Object.keys(customModel).forEach(key => {
                     const model = customModel[key];
@@ -73,7 +75,7 @@ class QScan extends EventEmitter {
         }
     }
     // 检查环境
-    doctor(modelName, cb) {
+    doctor(cb) {
         const tasks = [];
         let ports = [];
         let devices = [];
@@ -132,6 +134,7 @@ class QScan extends EventEmitter {
                 tasks.push(cb => model.checkApp(cb));
             }
         }
+        
         async.series(tasks, cb);
     }
     loadModel({ model, udid, port, opts }) {
