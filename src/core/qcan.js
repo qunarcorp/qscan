@@ -79,27 +79,12 @@ class QScan extends EventEmitter {
         let devices = [];
         tasks.push(cb => {
             // TODO Check Appium
-<<<<<<< HEAD
-            console.log('check appium');
-            let appServers = shelljs
-                .exec('ps | grep "appium"', { silent: true })
-                .stdout.trim()
-                .split('\n');
-            !appServers.some(server => server.includes('node')) &&
-                cb('There is no appium server!');
-            appServers.forEach(item => {
-                let pres = item.match(/[-p]{1} ([0-9]+)/);
-                pres && ports.push(pres[1]);
-            });
-            console.log('check appium over');
-=======
             
             if(!shelljs.which('appium')) {
                 cb('Not Found Appium');
             }
      
             cb(null);
->>>>>>> cfecd084a4bee969d09d0f4c7ffa9e9d9dc53470
         });
 
         if (modelName && this.models[modelName]) {
@@ -117,20 +102,6 @@ class QScan extends EventEmitter {
                 tasks.push(cb => {
                     // TODO Check Devices
                     // model.udid
-<<<<<<< HEAD
-                    if (
-                        !shelljs
-                            .exec('adb devices', {
-                                silent: true
-                            })
-                            .stdout.trim()
-                            .split('\n')
-                            .some(item => {
-                                item.split('\t')[0] === model;
-                            })
-                    ) {
-                        cb(`can not found device${model.udid}`);
-=======
                     if(!shelljs
                         .exec('adb devices', {
                             silent: true
@@ -144,7 +115,6 @@ class QScan extends EventEmitter {
                     // appium -u 
                     if(!devices.some(item => item === model.udid)) {
                         cb(`There is no appium server at devices${model.udid}`);
->>>>>>> cfecd084a4bee969d09d0f4c7ffa9e9d9dc53470
                     }
                     cb(null);
                 });
@@ -247,11 +217,6 @@ class QScan extends EventEmitter {
         return model.init(this.__initConnect(model), model.opts);
     }
     __checkStatus(model, cb) {
-<<<<<<< HEAD
-=======
-        let init = this.__initConnect(model);
-
->>>>>>> cfecd084a4bee969d09d0f4c7ffa9e9d9dc53470
         model.checkStatus(this.__initConnect(model), model.opts, cb);
     }
     __handleDevice({ modelName, type }, cb) {
@@ -261,15 +226,7 @@ class QScan extends EventEmitter {
             if (model.types && model.types[type]) {
                 this.__connectAppium(model, err => {
                     if (err) {
-<<<<<<< HEAD
                         cb(err);
-=======
-                        // 启动appium
-                        this.__connectAppium(
-                            model,
-                            this.__handleDevice({ modelName, type }, cb)
-                        );
->>>>>>> cfecd084a4bee969d09d0f4c7ffa9e9d9dc53470
                     } else {
                         // 检测登录状态
                         this.__checkStatus(model, (err, flag, app) => {
