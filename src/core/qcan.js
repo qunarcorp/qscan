@@ -41,14 +41,16 @@ class QScan extends EventEmitter {
         } else {
             modelOpts = {};
         }
-        
+
         // 读取默认的 Model
-        fs.readdirSync(DEFAULT_MODEL_PATH).forEach(file =>
+        fs.readdirSync(DEFAULT_MODEL_PATH).forEach(file => {
+            if (file.indexOf('.js') < 0) return;
+
             this.__loadModelFile({
                 modelFilePath: path.join(DEFAULT_MODEL_PATH, file),
                 modelOpts
-            })
-        );
+            });
+        });
         // 读取自定义 model，可以从指定目录读取，或者直接传入对象(key-value)或数组
         if (customModel) {
             if (typeof customModel === 'string' && fs.existsSync(customModel)) {
@@ -78,13 +80,15 @@ class QScan extends EventEmitter {
             // TODO Check Appium
             console.log('check appium');
             let appServers = shelljs
-                .exec('ps | grep "appium"', { silent: true})
-                .stdout.trim().split('\n');
-            !appServers.some(server => server.includes('node')) && cb('There is no appium server!');
+                .exec('ps | grep "appium"', { silent: true })
+                .stdout.trim()
+                .split('\n');
+            !appServers.some(server => server.includes('node')) &&
+                cb('There is no appium server!');
             appServers.forEach(item => {
-                    let pres = item.match(/[-p]{1} ([0-9]+)/);
-                    pres && ports.push(pres[1]);
-                });
+                let pres = item.match(/[-p]{1} ([0-9]+)/);
+                pres && ports.push(pres[1]);
+            });
             console.log('check appium over');
         });
 
@@ -94,14 +98,17 @@ class QScan extends EventEmitter {
                 tasks.push(cb => {
                     // TODO Check Devices
                     // model.udid
-                    if(!shelljs
-                        .exec('adb devices', {
-                            silent: true
-                        })
-                        .stdout.trim().split('\n').some(item => {
-                            item.split('\t')[0] === model;
-                        })
-                    ) {   
+                    if (
+                        !shelljs
+                            .exec('adb devices', {
+                                silent: true
+                            })
+                            .stdout.trim()
+                            .split('\n')
+                            .some(item => {
+                                item.split('\t')[0] === model;
+                            })
+                    ) {
                         cb(`can not found device${model.udid}`);
                     }
                 });
@@ -109,7 +116,7 @@ class QScan extends EventEmitter {
             if (model.port) {
                 tasks.push(cb => {
                     // TODO Check Appium Process
-                    if(!ports.some(port => port === model.port)) {
+                    if (!ports.some(port => port === model.port)) {
                         cb(`There is no appium server at port${model.port}`);
                     }
                 });
@@ -142,7 +149,6 @@ class QScan extends EventEmitter {
                 callback();
             });
         });
-        
     }
     clone({ newModelName, oldModelName, opts }) {
         this.models[newModelName] = Object.assign(
@@ -160,7 +166,21 @@ class QScan extends EventEmitter {
         });
     }
     __connectAppium(model, cb) {
-        const { port, uuid } = model;
+        const { port, udid } = model;
+
+        const process = shelljs
+            .exec(`ps -A | awk '/appium/{print $1 " " $4 " " $7 " " $9}'`, {
+                silent: true
+            })
+            .stdout.split('\n')
+            .filter(t => {
+                const l = t.trim().split(' ');
+                return l[1] === 'node' && +l[2] === +port && l[3] === udid;
+            });
+
+        if (process.length) return cb();
+
+        console.log('启动appium');
 
         const APPIUM_CLI = shelljs
             .exec('which appium', {
@@ -170,15 +190,11 @@ class QScan extends EventEmitter {
 
         const script = `tell application "Terminal"
                             activate
-                            do script ("${APPIUM_CLI} -p ${port} -U ${uuid}")
+                            do script ("${APPIUM_CLI} -p ${port} -U ${udid}")
                         end tell`;
 
         applescript.execString(script, function(err) {
-            if (err) {
-                throw err;
-            }
-
-            cb();
+            setTimeout(() => cb(err), 2000);
         });
     }
     __initConnect(model) {
@@ -191,45 +207,44 @@ class QScan extends EventEmitter {
             .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
     }
     __initModel(model) {
-        console.log('__init Model');
         return model.init(this.__initConnect(model), model.opts);
     }
     __checkStatus(model, cb) {
-        console.log('__checkStatus');
-        let init = this.__initConnect(model);
-        console.log('init', init);   
-        console.log('!!!!!!init  click after');
-
         model.checkStatus(this.__initConnect(model), model.opts, cb);
     }
     __handleDevice({ modelName, type }, cb) {
         const model = this.models[modelName];
+
         if (model) {
             if (model.types && model.types[type]) {
-                // 检测运行环境
-                this.doctor(modelName, err => {
+                this.__connectAppium(model, err => {
                     if (err) {
-                        console.log('doctor error', err);
-                        // 启动appium
-                        this.__connectAppium(
-                            model,
-                            this.__handleDevice({ modelName, type }, cb)
-                        );
+                        cb(err);
                     } else {
                         // 检测登录状态
-                        console.log('检登录状态');
                         this.__checkStatus(model, (err, flag, app) => {
                             if (!err) {
                                 if (flag) {
                                     // 可以直接扫码
-                                    model.types[type](app, model.opts, cb);
+                                    model.types[type](app, model.opts)
+                                        .catch(e => {
+                                            cb(e);
+                                        })
+                                        .finally(() => {
+                                            cb(null);
+                                        });
                                 } else {
                                     // 重新登录并扫码
                                     model.types[type](
                                         this.__initModel(model),
-                                        model.opts,
-                                        cb
-                                    );
+                                        model.opts
+                                    )
+                                        .catch(e => {
+                                            cb(e);
+                                        })
+                                        .finally(() => {
+                                            cb(null);
+                                        });
                                 }
                             } else {
                                 // 尝试再检测
