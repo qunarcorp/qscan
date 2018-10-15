@@ -3,10 +3,11 @@ const path = require('path');
 const wd = require('wd');
 const async = require('async');
 const applescript = require('applescript');
-
 const Queue = require('queue');
 const EventEmitter = require('events').EventEmitter;
 const shelljs = require('shelljs');
+const logger = require('../logger');
+
 // 本地 Host
 const LOCAL_HOST = '127.0.0.1';
 // 默认的等待时间
@@ -79,19 +80,20 @@ class QScan extends EventEmitter {
         let devices = [];
         tasks.push(cb => {
             // TODO Check Appium
-            
-            if(!shelljs.which('appium')) {
+
+            if (!shelljs.which('appium')) {
                 cb('Not Found Appium');
             }
-     
+
             cb(null);
         });
 
         if (modelName && this.models[modelName]) {
             const model = this.models[modelName];
             let appServers = shelljs
-                .exec('ps | grep "appium"', { silent: true})
-                .stdout.trim().split('\n');
+                .exec('ps | grep "appium"', { silent: true })
+                .stdout.trim()
+                .split('\n');
             appServers.forEach(item => {
                 let devicesRes = item.match(/[-U]{1} ([0-9A-Za-z]+)/);
                 devicesRes && devicesRes.push(devices[1]);
@@ -102,18 +104,23 @@ class QScan extends EventEmitter {
                 tasks.push(cb => {
                     // TODO Check Devices
                     // model.udid
-                    if(!shelljs
-                        .exec('adb devices', {
-                            silent: true
-                        })
-                        .stdout.trim().split('\n').some(item => {
-                            return item.split('\t')[0].trim() === model.udid;
-                        })
-                     ) {
+                    if (
+                        !shelljs
+                            .exec('adb devices', {
+                                silent: true
+                            })
+                            .stdout.trim()
+                            .split('\n')
+                            .some(item => {
+                                return (
+                                    item.split('\t')[0].trim() === model.udid
+                                );
+                            })
+                    ) {
                         cb(`Can Not Found device${model.udid}`);
                     }
-                    // appium -u 
-                    if(!devices.some(item => item === model.udid)) {
+                    // appium -u
+                    if (!devices.some(item => item === model.udid)) {
                         cb(`There is no appium server at devices${model.udid}`);
                     }
                     cb(null);
@@ -187,7 +194,7 @@ class QScan extends EventEmitter {
 
         if (process.length) return cb();
 
-        console.log('启动appium');
+        logger.await('启动appium中...');
 
         const APPIUM_CLI = shelljs
             .exec('which appium', {
@@ -255,7 +262,7 @@ class QScan extends EventEmitter {
                                 }
                             } else {
                                 // 尝试再检测
-                                console.log(err);
+                                logger.error(err);
                                 this.__handleDevice({ modelName, type }, cb);
                             }
                         });
