@@ -74,22 +74,28 @@ class QScan extends EventEmitter {
     doctor(modelName, cb) {
         const tasks = [];
         let ports = [];
+        let devices = [];
         tasks.push(cb => {
             // TODO Check Appium
-            console.log('check appium');
-            let appServers = shelljs
-                .exec('ps | grep "appium"', { silent: true})
-                .stdout.trim().split('\n');
-            !appServers.some(server => server.includes('node')) && cb('There is no appium server!');
-            appServers.forEach(item => {
-                    let pres = item.match(/[-p]{1} ([0-9]+)/);
-                    pres && ports.push(pres[1]);
-                });
-            console.log('check appium over');
+            
+            if(!shelljs.which('appium')) {
+                cb('Not Found Appium');
+            }
+     
+            cb(null);
         });
 
         if (modelName && this.models[modelName]) {
             const model = this.models[modelName];
+            let appServers = shelljs
+                .exec('ps | grep "appium"', { silent: true})
+                .stdout.trim().split('\n');
+            appServers.forEach(item => {
+                let devicesRes = item.match(/[-U]{1} ([0-9A-Za-z]+)/);
+                devicesRes && devicesRes.push(devices[1]);
+                let portsRes = item.match(/[-p]{1} ([0-9]+)/);
+                portsRes && ports.push(portsRes[1]);
+            });
             if (model.udid) {
                 tasks.push(cb => {
                     // TODO Check Devices
@@ -99,11 +105,16 @@ class QScan extends EventEmitter {
                             silent: true
                         })
                         .stdout.trim().split('\n').some(item => {
-                            item.split('\t')[0] === model;
+                            return item.split('\t')[0].trim() === model.udid;
                         })
-                    ) {   
-                        cb(`can not found device${model.udid}`);
+                     ) {
+                        cb(`Can Not Found device${model.udid}`);
                     }
+                    // appium -u 
+                    if(!devices.some(item => item === model.udid)) {
+                        cb(`There is no appium server at devices${model.udid}`);
+                    }
+                    cb(null);
                 });
             }
             if (model.port) {
@@ -112,6 +123,7 @@ class QScan extends EventEmitter {
                     if(!ports.some(port => port === model.port)) {
                         cb(`There is no appium server at port${model.port}`);
                     }
+                    cb(null);
                 });
             }
             if (model.checkApp) {
@@ -191,14 +203,10 @@ class QScan extends EventEmitter {
             .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
     }
     __initModel(model) {
-        console.log('__init Model');
         return model.init(this.__initConnect(model), model.opts);
     }
     __checkStatus(model, cb) {
-        console.log('__checkStatus');
         let init = this.__initConnect(model);
-        console.log('init', init);   
-        console.log('!!!!!!init  click after');
 
         model.checkStatus(this.__initConnect(model), model.opts, cb);
     }
@@ -209,7 +217,6 @@ class QScan extends EventEmitter {
                 // 检测运行环境
                 this.doctor(modelName, err => {
                     if (err) {
-                        console.log('doctor error', err);
                         // 启动appium
                         this.__connectAppium(
                             model,

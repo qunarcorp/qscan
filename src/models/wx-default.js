@@ -34,9 +34,13 @@ module.exports = {
         }, 100);
 
         shelljs
-            .exec('adb shell pm dump com.tencent.mm | grep "versionName"')
+            .exec('adb shell pm dump com.tencent.mm | grep "versionName"', {
+                silent: true
+            })
             .stdout(ret => {
-                ret.match(/\w=([0-9]+)/)[1] !== version && cb(new Error('The app version is not right'));
+                if(ret.match(/\w=([0-9]+)/)[1] !== version ) {
+                    cb('The app version is not right');
+                }
             });
     },
     // 初始化 App，从打开、登录到主界面
