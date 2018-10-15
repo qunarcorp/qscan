@@ -11,6 +11,7 @@ module.exports = {
         '-t, --type <type>': '使用的扫码类型'
     },
     action: (options) => {
+
         if (!options.model || !options.type) {
             Logger.error(`使用的扫码模式 <Model> 和使用的扫码类型 <Type> 参数，必须传入。`);
         } else {
@@ -18,11 +19,12 @@ module.exports = {
                 customModel: options.customModel || null,
                 runConfig: options.runConfig || null
             }).run({
-                model: options.model,
+                modelName: options.model,
                 type: options.type 
             }, (err) => {
                 if (err) {
-                    Logger.error('执行失败！');
+                    console.log(err);
+                    Logger.error('执行失败！', err.message);
                 } else {
                     Logger.success('执行成功！');
                 }

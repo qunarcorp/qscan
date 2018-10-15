@@ -3,10 +3,11 @@ const path = require('path');
 const wd = require('wd');
 const async = require('async');
 const applescript = require('applescript');
-
 const Queue = require('queue');
 const EventEmitter = require('events').EventEmitter;
 const shelljs = require('shelljs');
+const logger = require('../logger');
+
 // 本地 Host
 const LOCAL_HOST = '127.0.0.1';
 // 默认的等待时间
@@ -81,11 +82,11 @@ class QScan extends EventEmitter {
         let devices = [];
         tasks.push(cb => {
             // TODO Check Appium
-            
-            if(!shelljs.which('appium')) {
+
+            if (!shelljs.which('appium')) {
                 cb('Not Found Appium');
             }
-     
+
             cb(null);
         });
 
@@ -190,7 +191,7 @@ class QScan extends EventEmitter {
 
         if (process.length) return cb();
 
-        console.log('启动appium');
+        logger.await('启动appium中...');
 
         const APPIUM_CLI = shelljs
             .exec('which appium', {
@@ -258,8 +259,8 @@ class QScan extends EventEmitter {
                                 }
                             } else {
                                 // 尝试再检测
-                                console.log(err);
-                                // this.__handleDevice({ modelName, type }, cb);
+                                logger.error(err);
+                                this.__handleDevice({ modelName, type }, cb);
                             }
                         });
                     }

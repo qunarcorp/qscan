@@ -15,6 +15,16 @@ function rightPad(str, len, ch) {
     return str;
 }
 
+// 左侧附加空格，为了保持对齐
+function leftPad(str, len, ch) {
+    len = len || 12;
+    ch = ch || ' ';
+    for (let i = 0, l = len - str.length; i < l; i++) {
+        str = ch + str;
+    }
+    return str;
+}
+
 // 给字符串加颜色
 function addColor(str, color) {
     if (color) {
