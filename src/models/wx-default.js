@@ -1,6 +1,7 @@
 const pkgJSON = require('../../package.json');
 const CONST = require(`./wx_default_cfg/wx_${pkgJSON.support_wx_version}`);
 const shelljs = require('shelljs');
+const logger = require('../logger');
 
 const waitTimeout = 10 * 1000;
 const checkElTimeout = 3 * 1000;
@@ -46,7 +47,7 @@ module.exports = {
     },
     // 初始化 App，从打开、登录到主界面
     init: (app, opts) => {
-        console.log('开始登录');
+        logger.primary('开始登录');
 
         return (
             app
@@ -65,7 +66,7 @@ module.exports = {
                 // 重新设置等待时间
                 .setImplicitWaitTimeout(checkElTimeout)
                 .elementByXPathIfExists(CONST.AB_YES.xpath, (err, el) => {
-                    //通讯录弹窗是否存在, 存在则点击确定
+                    // 通讯录弹窗是否存在, 存在则点击确定
                     if (el) {
                         el.click();
                     }
@@ -76,13 +77,13 @@ module.exports = {
     },
     // 检查状态是否正确，包括登录的用户是指定用户等
     checkStatus: (app, opts, cb) => {
-        console.log('检测登录状态');
+        logger.primary('检测登录状态');
 
         app.setImplicitWaitTimeout(checkElTimeout)
             .hasElementByXPath(CONST.TAB_4.xpath)
             .then(ret => {
                 if (ret) {
-                    console.log('已登录! 检测等账号是否一致');
+                    logger.info('已登录! 检测等账号是否一致');
 
                     app.elementByXPath(CONST.TAB_4.xpath)
                         .click()
@@ -90,10 +91,10 @@ module.exports = {
                         .text()
                         .then(text => {
                             if (text === '微信号：' + opts.user) {
-                                console.log('一致! 可扫码');
+                                logger.success('一致! 可扫码');
                                 cb(null, true, app);
                             } else {
-                                console.log('不一致! 重新登录');
+                                logger.warn('不一致! 重新登录');
                                 cb(null, false);
                             }
                         })
@@ -101,7 +102,7 @@ module.exports = {
                             cb(err);
                         });
                 } else {
-                    console.log('未登录');
+                    logger.warn('未登录');
                     cb(null, false);
                 }
             })
@@ -113,7 +114,7 @@ module.exports = {
     types: {
         // 开发者工具登录
         'ide-login-scan': (app, opts, cb) => {
-            console.log('开发者工具: 开始扫码!');
+            logger.info('扫码类型: 开发者工具');
 
             return app
                 .setImplicitWaitTimeout(waitTimeout)
@@ -126,7 +127,7 @@ module.exports = {
         },
         // 微信后台登录
         'backstage-login-scan': (app, opts, cb) => {
-            console.log('微信后台: 开始扫码!');
+            logger.info('扫码类型: 微信后台');
 
             return app
                 .setImplicitWaitTimeout(waitTimeout)

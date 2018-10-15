@@ -3,11 +3,11 @@ const path = require('path');
 const wd = require('wd');
 const async = require('async');
 const applescript = require('applescript');
-
 const Queue = require('queue');
 const EventEmitter = require('events').EventEmitter;
 const shelljs = require('shelljs');
-const Logger = require('../logger');
+const logger = require('../logger');
+
 // 本地 Host
 const LOCAL_HOST = '127.0.0.1';
 // 默认的等待时间
@@ -86,7 +86,7 @@ class QScan extends EventEmitter {
             // TODO Check Appium
             
             if(!shelljs.which('appium')) {
-                Logger.warn('Not Found Appium');
+                logger.warn('Not Found Appium');
                 cb('Not Found Appium');
             }
             cb(null);
@@ -120,15 +120,15 @@ class QScan extends EventEmitter {
                         // TODO Check Devices
                         // model.udid
                         if(!connectDevices.includes(model.udid)) {
-                            Logger.warn(`Can Not Found device${model.udid}`)
+                            logger.warn(`Can Not Found device${model.udid}`)
                             cb(`Can Not Found device${model.udid}`);
                         }
                         // appium -u 
                         if(!devices.includes(model.udid)) {
-                            Logger.warn(`There is no appium server at devices${model.udid}`);
+                            logger.warn(`There is no appium server at devices${model.udid}`);
                             cb(`There is no appium server at devices${model.udid}`);
                         }
-                        Logger.success('The devices is ok');
+                        logger.success('The devices is ok');
                         cb(null);
                     });
                 }
@@ -136,10 +136,10 @@ class QScan extends EventEmitter {
                     tasks.push(cb => {
                         // TODO Check Appium Process
                         if (!ports.includes(model.port)) {
-                            Logger.warn(`There is no appium server at port${model.port}`);
+                            logger.warn(`There is no appium server at port${model.port}`);
                             cb(`There is no appium server at port${model.port}`);
                         }
-                        Logger.success('The port is ok');
+                        logger.success('The port is ok');
                         cb(null);
                     });
                 }
@@ -269,8 +269,8 @@ class QScan extends EventEmitter {
                                 }
                             } else {
                                 // 尝试再检测
-                                console.log(err);
-                                // this.__handleDevice({ modelName, type }, cb);
+                                logger.error(err);
+                                this.__handleDevice({ modelName, type }, cb);
                             }
                         });
                     }
