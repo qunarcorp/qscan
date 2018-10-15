@@ -71,7 +71,7 @@ class QScan extends EventEmitter {
         }
     }
     // 检查环境
-    doctor(modelName, cb) {
+    doctor(cb) {
         const tasks = [];
         let ports = [];
         tasks.push(cb => {
@@ -88,36 +88,7 @@ class QScan extends EventEmitter {
             console.log('check appium over');
         });
 
-        if (modelName && this.models[modelName]) {
-            const model = this.models[modelName];
-            if (model.udid) {
-                tasks.push(cb => {
-                    // TODO Check Devices
-                    // model.udid
-                    if(!shelljs
-                        .exec('adb devices', {
-                            silent: true
-                        })
-                        .stdout.trim().split('\n').some(item => {
-                            item.split('\t')[0] === model;
-                        })
-                    ) {   
-                        cb(`can not found device${model.udid}`);
-                    }
-                });
-            }
-            if (model.port) {
-                tasks.push(cb => {
-                    // TODO Check Appium Process
-                    if(!ports.some(port => port === model.port)) {
-                        cb(`There is no appium server at port${model.port}`);
-                    }
-                });
-            }
-            if (model.checkApp) {
-                tasks.push(cb => model.checkApp(cb));
-            }
-        }
+        
         async.series(tasks, cb);
     }
     loadModel({ model, udid, port, opts }) {
