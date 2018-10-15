@@ -90,6 +90,51 @@ class QScan extends EventEmitter {
             cb(null);
         });
 
+        if (modelName && this.models[modelName]) {
+            const model = this.models[modelName];
+            let appServers = shelljs
+                .exec('ps | grep "appium"', { silent: true})
+                .stdout.trim().split('\n');
+            appServers.forEach(item => {
+                let devicesRes = item.match(/[-U]{1} ([0-9A-Za-z]+)/);
+                devicesRes && devicesRes.push(devices[1]);
+                let portsRes = item.match(/[-p]{1} ([0-9]+)/);
+                portsRes && ports.push(portsRes[1]);
+            });
+            if (model.udid) {
+                tasks.push(cb => {
+                    // TODO Check Devices
+                    // model.udid
+                    if(!shelljs
+                        .exec('adb devices', {
+                            silent: true
+                        })
+                        .stdout.trim().split('\n').some(item => {
+                            return item.split('\t')[0].trim() === model.udid;
+                        })
+                     ) {
+                        cb(`Can Not Found device${model.udid}`);
+                    }
+                    // appium -u 
+                    if(!devices.some(item => item === model.udid)) {
+                        cb(`There is no appium server at devices${model.udid}`);
+                    }
+                    cb(null);
+                });
+            }
+            if (model.port) {
+                tasks.push(cb => {
+                    // TODO Check Appium Process
+                    if (!ports.some(port => port === model.port)) {
+                        cb(`There is no appium server at port${model.port}`);
+                    }
+                    cb(null);
+                });
+            }
+            if (model.checkApp) {
+                tasks.push(cb => model.checkApp(cb));
+            }
+        }
         
         async.series(tasks, cb);
     }

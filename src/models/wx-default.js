@@ -65,7 +65,7 @@ module.exports = {
                 // 重新设置等待时间
                 .setImplicitWaitTimeout(checkElTimeout)
                 .elementByXPathIfExists(CONST.AB_YES.xpath, (err, el) => {
-                    //通讯录弹窗是否存在, 存在则点击确定
+                    // 通讯录弹窗是否存在, 存在则点击确定
                     if (el) {
                         el.click();
                     }
