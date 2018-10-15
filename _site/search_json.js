@@ -2,7 +2,7 @@ window.ydoc_plugin_search_json = {
   "文档": [
     {
       "title": "简介",
-      "content": "QScan 是一个高度可定制的扫码工具，基于 appium，可灵活配置。QScan 提供了一个纯粹的自动扫码功能，它可以作为 node 的一个模块使用、作为 node 的一个中间件使用，因此使用起来非常灵活。",
+      "content": "QScan 是一个高度可定制的扫码工具，基于 appium，可灵活配置。QScan 提供了一个纯粹的自动扫码功能，它可以作为 node 的一个模块使用、作为 koa/express 的一个中间件使用，因此使用起来非常灵活。",
       "url": "/documents/index.html",
       "children": [
         {
@@ -51,18 +51,18 @@ window.ydoc_plugin_search_json = {
     },
     {
       "title": "使用教程",
-      "content": "QScan",
+      "content": "为了保证核心代码的纯粹，我们只提供最纯粹的自动扫码功能。QScan 可以作为一个 node 模块使用，也可以作为一个 koa/express 中间件使用，因此使用起来非常灵活 ~",
       "url": "/documents/usage.html",
       "children": [
         {
           "title": "作为 node 模块使用",
           "url": "/documents/usage.html#作为-node-模块使用",
-          "content": "作为 node 模块使用"
+          "content": "作为 node 模块使用const QScan = require('qscan'); // 引入 qscan 工具\n// 实例化一个 scan 对象\nconst scan = new QScan({\n    // model 配置\n    modelOpts: {\n        'wx-default': { // model 名称\n            udid: 'HICMHMZTTW8DFI59', // 安卓设备 id，通过 adb service 命令查看\n            port: '4723', // 端口号\n            opts: {\n                user: 'xxx', // 微信用户名\n                pass: 'xxx' // 微信密码\n            }\n        }\n    }\n});\n\n// 执行扫码\nscan.run(\n    {\n        modelName: 'wx-default', // model 名称\n        type: 'ide-login-scan' // 扫码类型\n    },\n    err => {\n        if (err) {\n            console.log(err); // 错误信息处理\n        }\n    }\n);\n\n"
         },
         {
-          "title": "作为 express/koa 的中间件使用",
-          "url": "/documents/usage.html#作为-expresskoa-的中间件使用",
-          "content": "作为 express/koa 的中间件使用"
+          "title": "作为 koa/express 的中间件使用",
+          "url": "/documents/usage.html#作为-koaexpress-的中间件使用",
+          "content": "作为 koa/express 的中间件使用const Koa = require('Koa');const app = new Koa();\nconst QScan = require('qscan');\n\n// model 配置\nconst modelOpts = {\n    'wx-default': { // model 名称\n        udid: '3HX0217705004280',  // 安卓设备 id，通过 adb service 命令查看\n        port: '4723', // 端口号\n        opts: {\n            user: 'xxx', // 微信用户名\n            pass: 'xxx' // 微信密码\n        }\n    }\n}\n\n// 使用 QScan 的中间件，传入 model 名称与选项\napp.use(QScan.middleWare({\n    customModel: 'wx-default', // 配置 model 名称\n    modelOpts // 传入 model 选项\n}));\n\napp.listen(9001, function () {\n    console.log(`Port[9001] started! `);\n});\n"
         }
       ]
     }
