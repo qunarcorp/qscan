@@ -1,5 +1,5 @@
 const pkgJSON = require('../../package.json');
-const CONST = require(`../const/wx_${pkgJSON.support_wx_version}`);
+const CONST = require(`./wx_default_cfg/wx_${pkgJSON.support_wx_version}`);
 const shelljs = require('shelljs');
 
 const waitTimeout = 10 * 1000;
@@ -34,9 +34,13 @@ module.exports = {
         }, 100);
 
         shelljs
-            .exec('adb shell pm dump com.tencent.mm | grep "versionName"')
+            .exec('adb shell pm dump com.tencent.mm | grep "versionName"', {
+                silent: true
+            })
             .stdout(ret => {
-                ret.match(/\w=([0-9]+)/)[1] !== version && cb(new Error('The app version is not right'));
+                if(ret.match(/\w=([0-9]+)/)[1] !== version ) {
+                    cb('The app version is not right');
+                }
             });
     },
     // 初始化 App，从打开、登录到主界面
@@ -110,37 +114,27 @@ module.exports = {
         'ide-login-scan': (app, opts, cb) => {
             console.log('开发者工具: 开始扫码!');
 
-            app.setImplicitWaitTimeout(waitTimeout)
+            return app
+                .setImplicitWaitTimeout(waitTimeout)
                 .waitForElementByXPath(CONST.THE_MORE_BTN.xpath)
                 .click()
                 .elementByXPath(CONST.THE_SCAN_BTN.xpath)
                 .click()
                 .waitForElementByXPath(CONST.MP_AFTER_SCAN.xpath)
-                .click()
-                .catch(e => {
-                    cb(e);
-                })
-                .finally(() => {
-                    cb(null);
-                });
+                .click();
         },
         // 微信后台登录
         'backstage-login-scan': (app, opts, cb) => {
             console.log('微信后台: 开始扫码!');
 
-            app.setImplicitWaitTimeout(waitTimeout)
+            return app
+                .setImplicitWaitTimeout(waitTimeout)
                 .waitForElementByXPath(CONST.THE_MORE_BTN.xpath)
                 .click()
                 .elementByXPath(CONST.THE_SCAN_BTN.xpath)
                 .click()
                 .waitForElementByXPath(CONST.IDE_AFTER_SCAN.xpath)
-                .click()
-                .catch(e => {
-                    cb(e);
-                })
-                .finally(() => {
-                    cb(null);
-                });
+                .click();
         }
     }
 };

@@ -1,14 +1,32 @@
+const QScan = require('../core/qcan');
+const Logger = require('../logger');
+
 module.exports = {
     usage: '[options]',
     description: '扫描二维码',
     options: {
-        '-u, --uri': '二维码地址',
-        '-f, --file': '二维码本地图片文件地址',
-        '-m, --model': '使用的扫码模式',
-        '-t, --type': '使用的扫码类型',
-        '-d, --device': '指定设备的 UDID'
+        '-c, --customModel <customModel>': '自定义模式路径，默认为空',
+        '-r, --runConfig <runConfig>': '运行配置，默认为 ~/.qscanrc',
+        '-m, --model <model>': '使用的扫码模式',
+        '-t, --type <type>': '使用的扫码类型'
     },
-    action: (rc, options) => {
-
+    action: (options) => {
+        if (!options.model || !options.type) {
+            Logger.error(`使用的扫码模式 <Model> 和使用的扫码类型 <Type> 参数，必须传入。`);
+        } else {
+            new QScan({
+                customModel: options.customModel || null,
+                runConfig: options.runConfig || null
+            }).run({
+                model: options.model,
+                type: options.type 
+            }, (err) => {
+                if (err) {
+                    Logger.error('执行失败！');
+                } else {
+                    Logger.success('执行成功！');
+                }
+            });
+        }
     }
 };
