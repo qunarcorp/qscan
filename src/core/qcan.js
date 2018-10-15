@@ -72,28 +72,36 @@ class QScan extends EventEmitter {
     }
     // 检查环境
     doctor(modelName, cb) {
-        console.log('!!!!!doctor');
         const tasks = [];
         let ports = [];
         tasks.push(cb => {
             // TODO Check Appium
+            console.log('check appium');
             let appServers = shelljs
-                .exec('ps | grep "appium"')
+                .exec('ps | grep "appium"', { silent: true})
                 .stdout.trim().split('\n');
-                
-            !appServers.some( server => server.includes('node')) && cb('There is no appium server!');
+            !appServers.some(server => server.includes('node')) && cb('There is no appium server!');
             appServers.forEach(item => {
                     let pres = item.match(/[-p]{1} ([0-9]+)/);
                     pres && ports.push(pres[1]);
                 });
+            console.log('check appium over');
         });
+
         if (modelName && this.models[modelName]) {
             const model = this.models[modelName];
             if (model.udid) {
                 tasks.push(cb => {
                     // TODO Check Devices
                     // model.udid
-                    if(!shelljs.exec('adb devices', { silent: true}).stdout.split('\n').some( udid =>  udid === model.udid)) {
+                    if(!shelljs
+                        .exec('adb devices', {
+                            silent: true
+                        })
+                        .stdout.trim().split('\n').some(item => {
+                            item.split('\t')[0] === model;
+                        })
+                    ) {   
                         cb(`can not found device${model.udid}`);
                     }
                 });
@@ -183,6 +191,7 @@ class QScan extends EventEmitter {
             .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
     }
     __initModel(model) {
+        console.log('__init Model');
         return model.init(this.__initConnect(model), model.opts);
     }
     __checkStatus(model, cb) {
@@ -208,6 +217,7 @@ class QScan extends EventEmitter {
                         );
                     } else {
                         // 检测登录状态
+                        console.log('检登录状态');
                         this.__checkStatus(model, (err, flag, app) => {
                             if (!err) {
                                 if (flag) {
