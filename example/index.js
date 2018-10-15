@@ -5,6 +5,7 @@ const scan = new QScan({
         'wx-default': {
             udid: '3HX0217705004280',
             port: '4723',
+            udid: '7PTS4TDAGM9DLNEU',
             opts: {
                 user: 'connorj',
                 pass: 'connorj.'
