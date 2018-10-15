@@ -42,12 +42,12 @@ module.exports = {
   THE_MORE_BTN: {
     name: '右上角加号',
     xpath:
-      '//android.widget.RelativeLayout[@content-desc="更多功能按钮"][@clickable="true"]'
+      '//android.widget.RelativeLayout[@content-desc="更多功能按钮"]'
   },
   THE_SCAN_BTN: {
     name: '扫一扫',
     xpath:
-      '//android.widget.LinearLayout[@resource-id="com.tencent.mm:id/jm"][@index=2][@clickable="true"]'
+      '//android.widget.LinearLayout[@resource-id="com.tencent.mm:id/jm"][@index=2]'
   },
   IDE_AFTER_SCAN: {
     name: 'ide扫码后确认',
