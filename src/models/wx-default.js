@@ -13,7 +13,7 @@ module.exports = {
     // Appium 连接参数
     connectOpt: {
         platformName: 'Android',
-        deviceName: 'Android',
+        deviceName: '7PTS4TDAGM9DLNEU',
         appPackage: 'com.tencent.mm',
         appActivity: '.ui.LauncherUI',
         noReset: 'true',
@@ -36,7 +36,7 @@ module.exports = {
         shelljs
             .exec('adb shell pm dump com.tencent.mm | grep "versionName"')
             .stdout(ret => {
-                console.log(ret);
+                ret.match(/\w=([0-9]+)/)[1] !== version && cb(new Error('The app version is not right'));
             });
     },
     // 初始化 App，从打开、登录到主界面

@@ -3,11 +3,10 @@ const path = require('path');
 const wd = require('wd');
 const async = require('async');
 const applescript = require('applescript');
-const shelljs = require('shelljs');
 
 const Queue = require('queue');
 const EventEmitter = require('events').EventEmitter;
-
+const shelljs = require('shelljs');
 // 本地 Host
 const LOCAL_HOST = '127.0.0.1';
 // 默认的等待时间
@@ -42,6 +41,7 @@ class QScan extends EventEmitter {
         } else {
             modelOpts = {};
         }
+        
         // 读取默认的 Model
         fs.readdirSync(DEFAULT_MODEL_PATH).forEach(file =>
             this.__loadModelFile({
@@ -72,10 +72,20 @@ class QScan extends EventEmitter {
     }
     // 检查环境
     doctor(modelName, cb) {
-        cb();
+        console.log('!!!!!doctor');
         const tasks = [];
+        let ports = [];
         tasks.push(cb => {
             // TODO Check Appium
+            let appServers = shelljs
+                .exec('ps | grep "appium"')
+                .stdout.trim().split('\n');
+                
+            !appServers.some( server => server.includes('node')) && cb('There is no appium server!');
+            appServers.forEach(item => {
+                    let pres = item.match(/[-p]{1} ([0-9]+)/);
+                    pres && ports.push(pres[1]);
+                });
         });
         if (modelName && this.models[modelName]) {
             const model = this.models[modelName];
@@ -83,11 +93,17 @@ class QScan extends EventEmitter {
                 tasks.push(cb => {
                     // TODO Check Devices
                     // model.udid
+                    if(!shelljs.exec('adb devices', { silent: true}).stdout.split('\n').some( udid =>  udid === model.udid)) {
+                        cb(`can not found device${model.udid}`);
+                    }
                 });
             }
             if (model.port) {
                 tasks.push(cb => {
                     // TODO Check Appium Process
+                    if(!ports.some(port => port === model.port)) {
+                        cb(`There is no appium server at port${model.port}`);
+                    }
                 });
             }
             if (model.checkApp) {
@@ -118,6 +134,7 @@ class QScan extends EventEmitter {
                 callback();
             });
         });
+        
     }
     clone({ newModelName, oldModelName, opts }) {
         this.models[newModelName] = Object.assign(
@@ -169,6 +186,11 @@ class QScan extends EventEmitter {
         return model.init(this.__initConnect(model), model.opts);
     }
     __checkStatus(model, cb) {
+        console.log('__checkStatus');
+        let init = this.__initConnect(model);
+        console.log('init', init);   
+        console.log('!!!!!!init  click after');
+
         model.checkStatus(this.__initConnect(model), model.opts, cb);
     }
     __handleDevice({ modelName, type }, cb) {
@@ -178,6 +200,7 @@ class QScan extends EventEmitter {
                 // 检测运行环境
                 this.doctor(modelName, err => {
                     if (err) {
+                        console.log('doctor error', err);
                         // 启动appium
                         this.__connectAppium(
                             model,
