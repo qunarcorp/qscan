@@ -13,7 +13,7 @@ module.exports = {
     // Appium 连接参数
     connectOpt: {
         platformName: 'Android',
-        deviceName: '7PTS4TDAGM9DLNEU',
+        deviceName: 'Android',
         appPackage: 'com.tencent.mm',
         appActivity: '.ui.LauncherUI',
         noReset: 'true',
@@ -27,21 +27,22 @@ module.exports = {
 
     // 检查 App 是否是相应的版本等
     checkApp: cb => {
-        const version = '6.7.0';
+        const version = pkgJSON.support_wx_version;
         // TODO
-        setTimeout(() => {
-            cb(null, true);
-        }, 100);
 
-        shelljs
+        if(shelljs
             .exec('adb shell pm dump com.tencent.mm | grep "versionName"', {
                 silent: true
             })
-            .stdout(ret => {
-                if(ret.match(/\w=([0-9]+)/)[1] !== version ) {
-                    cb('The app version is not right');
-                }
-            });
+            .stdout.trim()
+            .match(/\w=([0-9]+)/)[1] !== version) {
+                cb(`Need version-${version} wechat app`);
+                // install wx 6.7.2
+                
+            } else {
+                Logger.success('The app version is ok')
+                cb(null);
+            }
     },
     // 初始化 App，从打开、登录到主界面
     init: (app, opts) => {

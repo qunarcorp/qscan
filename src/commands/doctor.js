@@ -11,10 +11,10 @@ module.exports = {
     action: (options) => {
         new QScan({
             customModel: options.customModel || null,
-            runConfig: options.runConfig || null
+            modelOpts: options.runConfig || null
         }).doctor((err) => {
             if (err) {
-                Logger.error('检查运行环境 —— 失败！');
+                Logger.error(`检查运行环境 —— 失败！${err}`);
             } else {
                 Logger.success('检查运行环境 —— 成功！');
             }
