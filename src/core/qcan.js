@@ -45,22 +45,24 @@ class QScan extends EventEmitter {
 
         // 读取默认的 Model
         fs.readdirSync(DEFAULT_MODEL_PATH).forEach(file => {
-            if (file.indexOf('.js') < 0) return;
-
-            this.__loadModelFile({
-                modelFilePath: path.join(DEFAULT_MODEL_PATH, file),
-                modelOpts
-            });
+            if (path.extname(file) === '.js') {
+                this.__loadModelFile({
+                    modelFilePath: path.join(DEFAULT_MODEL_PATH, file),
+                    modelOpts
+                });
+            }
         });
         // 读取自定义 model，可以从指定目录读取，或者直接传入对象(key-value)或数组
         if (customModel) {
             if (typeof customModel === 'string' && fs.existsSync(customModel)) {
-                fs.readdirSync(customModel, file =>
-                    this.__loadModelFile({
-                        modelFilePath: path.join(customModel, file),
-                        modelOpts
-                    })
-                );
+                fs.readdirSync(customModel, file => {
+                    if (path.extname(file) === '.js') {
+                        this.__loadModelFile({
+                            modelFilePath: path.join(customModel, file),
+                            modelOpts
+                        })
+                    }
+                });
             } else {
                 Object.keys(customModel).forEach(key => {
                     const model = customModel[key];
@@ -74,7 +76,7 @@ class QScan extends EventEmitter {
         }
     }
     // 检查环境
-    doctor(modelName, cb) {
+    doctor(cb) {
         const tasks = [];
         let ports = [];
         let devices = [];
@@ -88,57 +90,7 @@ class QScan extends EventEmitter {
             cb(null);
         });
 
-        if (modelName && this.models[modelName]) {
-            const model = this.models[modelName];
-            let appServers = shelljs
-                .exec('ps | grep "appium"', { silent: true })
-                .stdout.trim()
-                .split('\n');
-            appServers.forEach(item => {
-                let devicesRes = item.match(/[-U]{1} ([0-9A-Za-z]+)/);
-                devicesRes && devicesRes.push(devices[1]);
-                let portsRes = item.match(/[-p]{1} ([0-9]+)/);
-                portsRes && ports.push(portsRes[1]);
-            });
-            if (model.udid) {
-                tasks.push(cb => {
-                    // TODO Check Devices
-                    // model.udid
-                    if (
-                        !shelljs
-                            .exec('adb devices', {
-                                silent: true
-                            })
-                            .stdout.trim()
-                            .split('\n')
-                            .some(item => {
-                                return (
-                                    item.split('\t')[0].trim() === model.udid
-                                );
-                            })
-                    ) {
-                        cb(`Can Not Found device${model.udid}`);
-                    }
-                    // appium -u
-                    if (!devices.some(item => item === model.udid)) {
-                        cb(`There is no appium server at devices${model.udid}`);
-                    }
-                    cb(null);
-                });
-            }
-            if (model.port) {
-                tasks.push(cb => {
-                    // TODO Check Appium Process
-                    if (!ports.some(port => port === model.port)) {
-                        cb(`There is no appium server at port${model.port}`);
-                    }
-                    cb(null);
-                });
-            }
-            if (model.checkApp) {
-                tasks.push(cb => model.checkApp(cb));
-            }
-        }
+        
         async.series(tasks, cb);
     }
     loadModel({ model, udid, port, opts }) {
