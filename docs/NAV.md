@@ -1,5 +1,4 @@
-# YDoc
+# QScan
 ![logo](ydoc/images/dog@1x.png)
 
-* [documents](/documents/index.md)
-* [about](/about/index.html)
+* [文档](/documents/index.md)

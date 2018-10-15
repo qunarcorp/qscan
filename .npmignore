@@ -3,3 +3,4 @@
 ./docs
 ./_site
 ./ydoc.json
+.vscode

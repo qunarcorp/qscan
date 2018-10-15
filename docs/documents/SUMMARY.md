@@ -1,8 +1,8 @@
 # Summary
 
-* [Installation](installation.md)
+* [简介](index.md)
 
-### Getting Started
+## 教程
 
-* [Introduction](intro.md#)
-  * [env](env.md)
+* [安装依赖](install.md)
+* [env](env.md)
