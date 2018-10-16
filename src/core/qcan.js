@@ -123,22 +123,14 @@ class QScan extends EventEmitter {
                     tasks.push(cb => {
                         // TODO Check Devices
                         // model.udid
-                        if (!connectDevices.includes(model.udid)) {
-                            logger.warn(`Can Not Found device${model.udid}`);
-                            cb(`Can Not Found device${model.udid}`);
+                        if(!connectDevices.includes(model.udid)) {
+                            cb(`Can Not Found device: ${model.udid}`);
+                            return;
                         }
-                        // appium -u
-                        if (!devices.includes(model.udid)) {
-                            logger.warn(
-                                `There is no appium server at devices${
-                                    model.udid
-                                }`
-                            );
-                            cb(
-                                `There is no appium server at devices${
-                                    model.udid
-                                }`
-                            );
+                        // appium -u 
+                        if(!devices.includes(model.udid)) {
+                            cb(`There is no appium server at devices: ${model.udid}`);
+                            return;
                         }
                         logger.success('The devices is ok');
                         cb(null);
@@ -148,12 +140,8 @@ class QScan extends EventEmitter {
                     tasks.push(cb => {
                         // TODO Check Appium Process
                         if (!ports.includes(model.port)) {
-                            logger.warn(
-                                `There is no appium server at port${model.port}`
-                            );
-                            cb(
-                                `There is no appium server at port${model.port}`
-                            );
+                            cb(`There is no appium server at port: ${model.port}`);
+                            return;
                         }
                         logger.success('The port is ok');
                         cb(null);

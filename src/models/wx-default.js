@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 
 const waitTimeout = 20 * 1000;
-const checkElTimeout = 5 * 1000;
+const checkElTimeout = 10 * 1000;
 
 module.exports = {
     // Model Name 默认的微信的配置
