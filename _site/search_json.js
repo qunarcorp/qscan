@@ -2,13 +2,13 @@ window.ydoc_plugin_search_json = {
   "文档": [
     {
       "title": "简介",
-      "content": "QScan 是一个高度可定制的扫码工具，基于 appium，可灵活配置。QScan 提供了一个纯粹的自动扫码功能，它可以作为 node 的一个模块使用、作为 koa/express 的一个中间件使用，因此使用起来非常灵活。",
+      "content": "QScan 是一个高度可定制的扫码工具，基于 Appium，可灵活配置。QScan 提供了一个纯粹的自动扫码功能，它可以作为 Node 的一个模块使用、作为 koa/express 的一个中间件使用，因此使用起来非常灵活。",
       "url": "/documents/index.html",
       "children": [
         {
-          "title": "案例",
-          "url": "/documents/index.html#案例",
-          "content": "案例"
+          "title": "如何使用",
+          "url": "/documents/index.html#如何使用",
+          "content": "如何使用安装依赖: 使用 QScan 需要预先准备若干设备并安装一些工具\n使用教程: 具体的使用方式\n"
         }
       ]
     },
