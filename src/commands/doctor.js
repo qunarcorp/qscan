@@ -6,7 +6,7 @@ module.exports = {
     description: '检查运行环境',
     options: {
         '-c, --customModel <customModel>': '自定义模式路径，默认为空',
-        '-r, --runConfig <runConfig>': '运行配置，默认为 ~/.qscanrc'       
+        '-r, --runConfig <runConfig>': '运行配置绝对路径，默认为 ~/.qscanrc'       
     },
     action: (options) => {
         new QScan({

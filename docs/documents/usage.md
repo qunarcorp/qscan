@@ -44,11 +44,11 @@ Commands:
   serve [options]   启动自助二维码扫描服务
 ```
 
-#### 1. qscanscan 扫描二维码
+#### 1. qscan scan 扫描二维码
 ``` bash
 Options:
   -c, --customModel <customModel>  自定义模式路径，默认为空
-  -r, --runConfig <runConfig>      运行配置，默认为 ~/.qscanrc
+  -r, --runConfig <runConfig>      运行配置参数绝对路径，默认为 ~/.qscanrc
   -m, --model <model>              使用的扫码模式
   -t, --type <type>                使用的扫码类型
   -h, --help                       output usage information
@@ -64,7 +64,7 @@ qscan scan -m 'wx-default' -t 'ide-login-scan'
 ```bash
 Options:
   -c, --customModel <customModel>  自定义模式路径，默认为空
-  -r, --runConfig <runConfig>      运行配置，默认为 ~/.qscanrc
+  -r, --runConfig <runConfig>      运行配置参数绝对路径，默认为 ~/.qscanrc
   -h, --help                       output usage information
 ```
 配置好 ```~/.qscanrc``` 后，执行：
