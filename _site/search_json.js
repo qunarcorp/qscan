@@ -72,7 +72,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "命令行调用",
           "url": "/documents/usage.html#调用方式-命令行调用",
-          "content": "命令行调用全局安装 QScan 后即可使用命令行调用，现在支持三个命令：Commands:  doctor [options]  检查运行环境\n  scan [options]    扫描二维码\n  serve [options]   启动自助二维码扫描服务\n1. qscan doctor 检测扫码环境扫码环境Options:  -c, --customModel   自定义模式路径，默认为空\n  -r, --runConfig       运行配置，默认为 ~/.qscanrc\n  -h, --help                       output usage information\n配置好 ~/.qscanrc 后，执行：qscan doctor2. qscan scan 扫描二维码Options:  -c, --customModel   自定义模式路径，默认为空\n  -r, --runConfig       运行配置，默认为 ~/.qscanrc\n  -m, --model               使用的扫码模式\n  -t, --type                 使用的扫码类型\n  -h, --help                       output usage information\n配置好 ~/.qscanrc 后，执行：qscan scan -m 'wx-default' -t 'ide-login-scan'"
+          "content": "命令行调用全局安装 QScan 后即可使用命令行调用，现在支持三个命令：Commands:  doctor [options]  检查运行环境\n  scan [options]    扫描二维码\n  serve [options]   启动自助二维码扫描服务\n1. qscan doctor 检查运行环境Options:  -c, --customModel   自定义模式路径，默认为空\n  -r, --runConfig       运行配置绝对路径，默认为 ~/.qscanrc\n  -h, --help                       output usage information\n配置好 ~/.qscanrc 后，执行：qscan doctor2. qscan scan 扫描二维码Options:  -c, --customModel   自定义模式路径，默认为空\n  -r, --runConfig       运行配置，默认为 ~/.qscanrc\n  -m, --model               使用的扫码模式\n  -t, --type                 使用的扫码类型\n  -h, --help                       output usage information\n配置好 ~/.qscanrc 后，执行：qscan scan -m 'wx-default' -t 'ide-login-scan'"
         },
         {
           "title": "作为 node 模块使用",

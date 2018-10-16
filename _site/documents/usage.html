@@ -48,11 +48,10 @@
   scan <span class="token punctuation">[</span>options<span class="token punctuation">]</span>    扫描二维码
   serve <span class="token punctuation">[</span>options<span class="token punctuation">]</span>   启动自助二维码扫描服务
 </code></pre>
-<h4>1. qscan doctor 检测扫码环境</h4>
-<p>扫码环境</p>
+<h4>1. qscan doctor 检查运行环境</h4>
 <pre><code class="language-bash">Options:
   -c, --customModel <span class="token operator">&lt;</span>customModel<span class="token operator">></span>  自定义模式路径，默认为空
-  -r, --runConfig <span class="token operator">&lt;</span>runConfig<span class="token operator">></span>      运行配置，默认为 ~/.qscanrc
+  -r, --runConfig <span class="token operator">&lt;</span>runConfig<span class="token operator">></span>      运行配置绝对路径，默认为 ~/.qscanrc
   -h, --help                       output usage information
 </code></pre>
 <p>配置好 <code>~/.qscanrc</code> 后，执行：</p>

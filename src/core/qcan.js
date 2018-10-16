@@ -87,10 +87,10 @@ class QScan extends EventEmitter {
             // TODO Check Appium
 
             if (!shelljs.which('appium')) {
-                logger.warn('Not Found Appium');
                 cb('Not Found Appium');
+            } else {
+                cb(null);
             }
-            cb(null);
         });
 
         if (this.models) {

@@ -44,12 +44,11 @@ Commands:
   serve [options]   启动自助二维码扫描服务
 ```
 
-#### 1. qscan doctor 检测扫码环境
-扫码环境
-```bash
+#### 1. qscan doctor 检查运行环境
+``` bash
 Options:
   -c, --customModel <customModel>  自定义模式路径，默认为空
-  -r, --runConfig <runConfig>      运行配置，默认为 ~/.qscanrc
+  -r, --runConfig <runConfig>      运行配置绝对路径，默认为 ~/.qscanrc
   -h, --help                       output usage information
 ```
 配置好 ```~/.qscanrc``` 后，执行：
