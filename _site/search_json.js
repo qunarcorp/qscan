@@ -45,7 +45,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "使用 NPM 安装 QScan",
           "url": "/documents/install.html#安装-qscan-使用-npm-安装-qscan",
-          "content": "使用 NPM 安装 QScannpm install qscan [-g]安装完成后执行 qscan 即可查看命令：Usage: qscan [options] [command]\nOptions:\n  -v, --version     output the version number\n  -h, --help        output usage information\n\nCommands:\n  doctor [options]  检查运行环境\n  scan [options]    扫描二维码\n  serve [options]   启动自助二维码扫描服务\n"
+          "content": "使用 NPM 安装 QScan全局安装npm install qscan [-g]安装完成后即可通过命令行调用，执行 qscan -v 查看 QScan 版本项目中安装npm install qscan [--save-dev]作为项目依赖安装，可以通过模块方式引入，作为模块或中间件使用"
         }
       ]
     },
@@ -54,6 +54,11 @@ window.ydoc_plugin_search_json = {
       "content": "为了保证核心代码的纯粹，我们只提供最纯粹的自动扫码功能。QScan 可以作为一个 node 模块使用，也可以作为一个 koa/express 中间件使用，因此使用起来非常灵活 ~",
       "url": "/documents/usage.html",
       "children": [
+        {
+          "title": "命令行调用",
+          "url": "/documents/usage.html#命令行调用",
+          "content": "命令行调用安装 QScan 后即可使用命令行调用，方法如下："
+        },
         {
           "title": "作为 node 模块使用",
           "url": "/documents/usage.html#作为-node-模块使用",

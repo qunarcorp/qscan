@@ -2,6 +2,8 @@ const pkgJSON = require('../../package.json');
 const CONST = require(`./wx_default_cfg/wx_${pkgJSON.support_wx_version}`);
 const shelljs = require('shelljs');
 const logger = require('../logger');
+const path = require('path');
+const fs = require('fs');
 
 const waitTimeout = 10 * 1000;
 const checkElTimeout = 3 * 1000;
@@ -29,21 +31,36 @@ module.exports = {
     // 检查 App 是否是相应的版本等
     checkApp: cb => {
         const version = pkgJSON.support_wx_version;
-        // TODO
-
-        if(shelljs
+        const currentVersion = shelljs
             .exec('adb shell pm dump com.tencent.mm | grep "versionName"', {
                 silent: true
             })
-            .stdout.trim()
-            .match(/\w=([0-9]+)/)[1] !== version) {
-                cb(`Need version-${version} wechat app`);
-                // install wx 6.7.2
-                
-            } else {
-                Logger.success('The app version is ok')
-                cb(null);
+            .stdout.trim();
+        // TODO
+        if(!currentVersion || currentVersion.match(/\w=([0-9.]+)/)[1] !== version) {
+            logger.warn(`Need version-${version} wechat app`);
+            logger.info(`installing ${version} wxchat...`);
+            // install wx 6.7.2
+            const apksPath = path.join(__dirname, '../apks'),
+                apkLinePath = 'http://yapkwww.cdn.anzhi.com/data4/apk/201808/20/21134e06c366c63faace92226d3124bb_29305400.apk';
+            
+            if(!fs.existsSync(`${apksPath}/wx672.apk`)) {
+                shelljs.exec(`mkdir ${apksPath}`);
+                shelljs.exec(`curl -o ${apksPath}/wx672.apk  ${apkLinePath}`);
             }
+            
+            if(shelljs.exec(`adb install -r ${apksPath}/wx672.apk`, {
+                silent: true,
+            }).code === 0) {
+                logger.info('install success');
+                cb(null);
+            } else {
+                cb(`Need wxchat-${version}, please install manually`);
+            }
+        } else {
+            logger.success('The app version is ok')
+            cb(null);
+        }
     },
     // 初始化 App，从打开、登录到主界面
     init: (app, opts) => {
