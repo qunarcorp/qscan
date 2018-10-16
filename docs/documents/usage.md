@@ -4,11 +4,38 @@
 
 QScan 可以作为一个 Node 模块使用，也可以作为一个 koa/express 中间件使用，因此使用起来非常灵活 ~
 
-## 命令行调用
+## 配置
 
+QScan 扫码需要一个配置，这个配置可以写在 ```~/.qscanrc``` 文件中，也可以写在代码中，这个配置的格式如下：
+
+``` json
+{
+    "wx-default": { // key 值为 Modal 名称
+        "udid": "HICMHMZTTW8DFI59", // 安卓设备 id，通过 adb service 命令查看
+        "port": "4723", // 端口号
+        "opts": {
+            "user": "xxx", // 微信用户名
+            "pass": "xxx" // 微信密码
+        },
+        "checkApp": false // 校验是否安装微信 APP
+    }
+}
+```
+
+QScan 官方提供 Modal，指定扫码模式，目前只支持微信扫码：
+
+### wx-default (微信扫码)
+|type 名称   | 功能 |
+|-----------|------ |
+|ide-login-scan | 开发者工具登录 |
+|backstage-login-scan | 微信后台登录 |
+
+## 调用方式
+
+### 命令行调用
 安装 QScan 后即可使用命令行调用，方法如下：
 
-## 作为 node 模块使用
+### 作为 node 模块使用
 
 ``` js
 const QScan = require('qscan'); // 引入 qscan 工具
@@ -28,7 +55,7 @@ const scan = new QScan({
     }
 });
 
-// 执行扫码
+// 传入名称和类型，执行扫码
 scan.run(
     {
         modelName: 'wx-default', // model 名称
@@ -43,7 +70,7 @@ scan.run(
 
 ```
 
-## 作为 koa/express 的中间件使用
+### 作为 koa/express 的中间件使用
 
 ``` js
 const Koa = require('Koa');
