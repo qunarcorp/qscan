@@ -51,7 +51,7 @@ window.ydoc_plugin_search_json = {
     },
     {
       "title": "使用教程",
-      "content": "为了保证核心代码的纯粹，我们只提供最纯粹的自动扫码功能。QScan 可以作为一个 node 模块使用，也可以作为一个 koa/express 中间件使用，因此使用起来非常灵活 ~",
+      "content": "为了保证核心代码的纯粹，我们只提供最纯粹的自动扫码功能。QScan 可以作为一个 Node 模块使用，也可以作为一个 koa/express 中间件使用，因此使用起来非常灵活 ~",
       "url": "/documents/usage.html",
       "children": [
         {
