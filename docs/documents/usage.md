@@ -35,7 +35,7 @@ QScan 官方提供 Modal，指定 **扫码模式**，目前只支持微信扫码
 ## 调用方式
 
 ### 命令行调用
-安装 QScan 后即可使用命令行调用，现在支持三个命令：
+全局安装 QScan 后即可使用命令行调用，现在支持三个命令：
 
 ``` bash
 Commands:
@@ -44,7 +44,21 @@ Commands:
   serve [options]   启动自助二维码扫描服务
 ```
 
-#### 1. qscanscan 扫描二维码
+#### 1. qscan doctor 检测扫码环境
+扫码环境
+```bash
+Options:
+  -c, --customModel <customModel>  自定义模式路径，默认为空
+  -r, --runConfig <runConfig>      运行配置，默认为 ~/.qscanrc
+  -h, --help                       output usage information
+```
+配置好 ```~/.qscanrc``` 后，执行：
+
+``` js
+qscan doctor
+```
+
+#### 2. qscan scan 扫描二维码
 ``` bash
 Options:
   -c, --customModel <customModel>  自定义模式路径，默认为空
@@ -60,18 +74,6 @@ Options:
 qscan scan -m 'wx-default' -t 'ide-login-scan'
 ```
 
-#### 2. qscan doctor 扫描二维码
-```bash
-Options:
-  -c, --customModel <customModel>  自定义模式路径，默认为空
-  -r, --runConfig <runConfig>      运行配置，默认为 ~/.qscanrc
-  -h, --help                       output usage information
-```
-配置好 ```~/.qscanrc``` 后，执行：
-
-``` js
-qscan doctor
-```
 
 ### 作为 node 模块使用
 
@@ -96,7 +98,7 @@ const scan = new QScan({
 
 我们实例化一个 QScan 对象，取名为 scan，这个对象有如下方法：
 
-#### scan.run({ modelName, type }, cb) 扫描二维码：
+#### scan.run({ modelName, type }, cb) 扫描二维码:
 ``` js
 scan.run(
     {
@@ -111,9 +113,37 @@ scan.run(
 );
 ```
 
-#### scan.doctor(cb) 检查环境
-#### scan.loadModel({ model, udid, port, opts }) 传入 Model 名称和类型，执行扫码：
-#### scan.clone({ newModelName, oldModelName, opts }) 拷贝一份 Model
+#### scan.doctor(cb) 检查环境:
+``` js
+scan.doctor(err => {
+    if (err) {
+        console.log(err);
+    }
+});
+```
+
+#### scan.clone({ newModelName, oldModelName, opts }) 拷贝一份 Model，可以用 ```opts``` 对象覆盖一部分属性:
+``` js
+scan.clone({
+    newModelName: 'another-model',
+    oldModelName: 'wx-default',
+    opts: {}
+});
+```
+
+#### scan.loadModel({ model, udid, port, opts }) 自定义传入的 Model：
+``` js
+const myModel = require('./myModel.js');
+scan.loadModel({
+    model: myModel,
+    udid: '3HX0217705004280',
+    port: '4723',
+    opts: {
+        user: 'xxx',
+        pass: 'xxx'
+    }
+});
+```
 
 ### 作为 koa/express 的中间件使用
 
