@@ -52,21 +52,14 @@ nvm install stable
 
 ### 使用 NPM 安装 QScan
 
+#### 全局安装
 ```
 npm install qscan [-g]
 ```
+安装完成后即可通过命令行调用，执行 ```qscan -v``` 查看 QScan 版本
 
-安装完成后执行 ```qscan``` 即可查看命令：
-
-``` bash
-Usage: qscan [options] [command]
-
-Options:
-  -v, --version     output the version number
-  -h, --help        output usage information
-
-Commands:
-  doctor [options]  检查运行环境
-  scan [options]    扫描二维码
-  serve [options]   启动自助二维码扫描服务
+#### 项目中安装
 ```
+npm install qscan [--save-dev]
+```
+作为项目依赖安装，可以通过模块方式引入，作为模块或中间件使用
