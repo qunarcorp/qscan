@@ -5,8 +5,8 @@ const logger = require('../logger');
 const path = require('path');
 const fs = require('fs');
 
-const waitTimeout = 10 * 1000;
-const checkElTimeout = 3 * 1000;
+const waitTimeout = 20 * 1000;
+const checkElTimeout = 10 * 1000;
 
 module.exports = {
     // Model Name 默认的微信的配置

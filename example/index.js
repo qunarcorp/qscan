@@ -3,11 +3,11 @@ const QScan = require('../src/index');
 const scan = new QScan({
     modelOpts: {
         'wx-default': {
-            udid: 'HICMHMZTTW8DFI59',
+            udid: '3HX0217705004280',
             port: '4723',
             opts: {
-                user: 'connorj',
-                pass: 'connorj..2'
+                user: '15311512923',
+                pass: '910216hqy'
             }
         }
     }
