@@ -25,10 +25,11 @@ const DEFAULT_MODEL_OPTS_PATH = path.join(process.env['HOME'], '.qscanrc');
 
 class QScan extends EventEmitter {
     constructor({ customModel, modelOpts }) {
-
         super();
         // Models
         this.models = {};
+        // webdrivers
+        this.wds = {};
         // 队列
         this.queues = {};
         // 读取配置 默认从 ~/.qscanrc 读取，也可以传进来
@@ -61,7 +62,7 @@ class QScan extends EventEmitter {
                         this.__loadModelFile({
                             modelFilePath: path.join(customModel, file),
                             modelOpts
-                        })
+                        });
                     }
                 });
             } else {
@@ -84,18 +85,19 @@ class QScan extends EventEmitter {
             connectDevices = [];
         tasks.push(cb => {
             // TODO Check Appium
-            
-            if(!shelljs.which('appium')) {
+
+            if (!shelljs.which('appium')) {
                 logger.warn('Not Found Appium');
                 cb('Not Found Appium');
             }
             cb(null);
         });
 
-        if(this.models) {
+        if (this.models) {
             let appServers = shelljs
-                .exec('ps | grep "appium"', { silent: true})
-                .stdout.trim().split('\n');
+                .exec('ps | grep "appium"', { silent: true })
+                .stdout.trim()
+                .split('\n');
             appServers.forEach(item => {
                 let devicesRes = item.match(/[-U]{1} ([0-9A-Za-z]+)/);
                 devicesRes && devices.push(devicesRes[1]);
@@ -105,28 +107,38 @@ class QScan extends EventEmitter {
 
             connectDevices = shelljs
                 .exec('adb devices', { silent: true })
-                .stdout.trim().split('\n').map(item => {
+                .stdout.trim()
+                .split('\n')
+                .map(item => {
                     return item.split('\t')[0].trim();
-                })
+                });
         }
 
         Object.keys(this.models).forEach(key => {
             let modelName = this.models[key].name;
             if (modelName && this.models[modelName]) {
                 const model = this.models[modelName];
-                
+
                 if (model.udid) {
                     tasks.push(cb => {
                         // TODO Check Devices
                         // model.udid
-                        if(!connectDevices.includes(model.udid)) {
-                            logger.warn(`Can Not Found device${model.udid}`)
+                        if (!connectDevices.includes(model.udid)) {
+                            logger.warn(`Can Not Found device${model.udid}`);
                             cb(`Can Not Found device${model.udid}`);
                         }
-                        // appium -u 
-                        if(!devices.includes(model.udid)) {
-                            logger.warn(`There is no appium server at devices${model.udid}`);
-                            cb(`There is no appium server at devices${model.udid}`);
+                        // appium -u
+                        if (!devices.includes(model.udid)) {
+                            logger.warn(
+                                `There is no appium server at devices${
+                                    model.udid
+                                }`
+                            );
+                            cb(
+                                `There is no appium server at devices${
+                                    model.udid
+                                }`
+                            );
                         }
                         logger.success('The devices is ok');
                         cb(null);
@@ -136,8 +148,12 @@ class QScan extends EventEmitter {
                     tasks.push(cb => {
                         // TODO Check Appium Process
                         if (!ports.includes(model.port)) {
-                            logger.warn(`There is no appium server at port${model.port}`);
-                            cb(`There is no appium server at port${model.port}`);
+                            logger.warn(
+                                `There is no appium server at port${model.port}`
+                            );
+                            cb(
+                                `There is no appium server at port${model.port}`
+                            );
                         }
                         logger.success('The port is ok');
                         cb(null);
@@ -147,7 +163,7 @@ class QScan extends EventEmitter {
                     tasks.push(cb => model.checkApp(cb));
                 }
             }
-        })
+        });
         async.series(tasks, cb);
     }
     loadModel({ model, udid, port, opts }) {
@@ -215,17 +231,25 @@ class QScan extends EventEmitter {
                         end tell`;
 
         applescript.execString(script, function(err) {
-            setTimeout(() => cb(err), 2000);
+            setTimeout(() => cb(err), 4000);
         });
     }
     __initConnect(model) {
-        return wd
-            .promiseChainRemote({
-                host: LOCAL_HOST,
-                port: model.port
-            })
-            .init(model.connectOpt)
-            .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
+        let ret = null;
+
+        if (this.wds[model.port]) {
+            ret = this.wds[model.port];
+        } else {
+            this.wds[model.port] = ret = wd
+                .promiseChainRemote({
+                    host: LOCAL_HOST,
+                    port: model.port
+                })
+                .init(model.connectOpt)
+                .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
+        }
+
+        return ret;
     }
     __initModel(model) {
         return model.init(this.__initConnect(model), model.opts);
@@ -269,8 +293,8 @@ class QScan extends EventEmitter {
                                 }
                             } else {
                                 // 尝试再检测
-                                logger.error(err);
-                                this.__handleDevice({ modelName, type }, cb);
+                                cb(err);
+                                // this.__handleDevice({ modelName, type }, cb);
                             }
                         });
                     }
