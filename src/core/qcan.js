@@ -28,6 +28,8 @@ class QScan extends EventEmitter {
         super();
         // Models
         this.models = {};
+        // webdrivers
+        this.wds = {};
         // 队列
         this.queues = {};
         // 读取配置 默认从 ~/.qscanrc 读取，也可以传进来
@@ -233,16 +235,12 @@ class QScan extends EventEmitter {
         });
     }
     __initConnect(model) {
-        // return wd
-        //     .promiseChainRemote({
-        //         host: LOCAL_HOST,
-        //         port: model.port
-        //     })
-        //     .init(model.connectOpt)
-        //     .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
+        let ret = null;
 
-        if (!this._wd) {
-            this._wd = wd
+        if (this.wds[model.port]) {
+            ret = this.wds[model.port];
+        } else {
+            this.wds[model.port] = ret = wd
                 .promiseChainRemote({
                     host: LOCAL_HOST,
                     port: model.port
@@ -250,8 +248,8 @@ class QScan extends EventEmitter {
                 .init(model.connectOpt)
                 .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
         }
-        console.log(this._wd);
-        return this._wd;
+
+        return ret;
     }
     __initModel(model) {
         return model.init(this.__initConnect(model), model.opts);
