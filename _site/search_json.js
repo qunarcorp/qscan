@@ -57,12 +57,12 @@ window.ydoc_plugin_search_json = {
         {
           "title": "配置",
           "url": "/documents/usage.html#配置",
-          "content": "配置QScan 扫码需要一个配置，这个配置可以写在 ~/.qscanrc 文件中，也可以写在代码中，这个配置的格式如下：{    \"wx-default\": { // key 值为 Modal 名称\n        \"udid\": \"HICMHMZTTW8DFI59\", // 安卓设备 id，通过 adb service 命令查看\n        \"port\": \"4723\", // 端口号\n        \"opts\": {\n            \"user\": \"xxx\", // 微信用户名\n            \"pass\": \"xxx\" // 微信密码\n        },\n        \"checkApp\": false // 校验是否安装微信 APP\n    }\n}\nQScan 官方提供 Modal，指定扫码模式，目前只支持微信扫码："
+          "content": "配置QScan 扫码需要一个配置，这个配置可以写在 ~/.qscanrc 文件中，也可以写在代码中，这个配置的格式如下：{    \"wx-default\": { // key 值为 Modal 名称\n        \"udid\": \"HICMHMZTTW8DFI59\", // 安卓设备 id，通过 adb service 命令查看\n        \"port\": \"4723\", // 端口号\n        \"opts\": {\n            \"user\": \"xxx\", // 微信用户名\n            \"pass\": \"xxx\" // 微信密码\n        },\n        \"checkApp\": false // 校验是否安装微信 APP\n    }\n}\nQScan 官方提供 Modal，指定 扫码模式，目前只支持微信扫码："
         },
         {
           "title": "wx-default (微信扫码)",
           "url": "/documents/usage.html#配置-wx-default-微信扫码",
-          "content": "wx-default (微信扫码)\n\ntype 名称\n功能\n\n\n\n\nide-login-scan\n开发者工具登录\n\n\nbackstage-login-scan\n微信后台登录\n\n\n"
+          "content": "wx-default (微信扫码)\n\ntype 名称\n功能\n\n\n\n\nide-login-scan\n开发者工具登录\n\n\nbackstage-login-scan\n微信后台登录\n\n\n除此之外，你还可以开发自己的 扫码模式： 自定义模式"
         },
         {
           "title": "调用方式",
@@ -72,17 +72,22 @@ window.ydoc_plugin_search_json = {
         {
           "title": "命令行调用",
           "url": "/documents/usage.html#调用方式-命令行调用",
-          "content": "命令行调用安装 QScan 后即可使用命令行调用，方法如下："
+          "content": "命令行调用安装 QScan 后即可使用命令行调用，现在支持三个命令：Commands:  doctor [options]  检查运行环境\n  scan [options]    扫描二维码\n  serve [options]   启动自助二维码扫描服务\n1. qscanscan 扫描二维码Options:  -c, --customModel   自定义模式路径，默认为空\n  -r, --runConfig       运行配置，默认为 ~/.qscanrc\n  -m, --model               使用的扫码模式\n  -t, --type                 使用的扫码类型\n  -h, --help                       output usage information\n配置好 ~/.qscanrc 后，执行：qscan scan -m 'wx-default' -t 'ide-login-scan'2. qscan doctor 扫描二维码Options:  -c, --customModel   自定义模式路径，默认为空\n  -r, --runConfig       运行配置，默认为 ~/.qscanrc\n  -h, --help                       output usage information\n配置好 ~/.qscanrc 后，执行：qscan doctor"
         },
         {
           "title": "作为 node 模块使用",
           "url": "/documents/usage.html#调用方式-作为-node-模块使用",
-          "content": "作为 node 模块使用const QScan = require('qscan'); // 引入 qscan 工具\n// 实例化一个 scan 对象\nconst scan = new QScan({\n    // model 配置\n    modelOpts: {\n        'wx-default': { // model 名称\n            udid: 'HICMHMZTTW8DFI59', // 安卓设备 id，通过 adb service 命令查看\n            port: '4723', // 端口号\n            opts: {\n                user: 'xxx', // 微信用户名\n                pass: 'xxx' // 微信密码\n            }\n        }\n    }\n});\n\n// 传入名称和类型，执行扫码\nscan.run(\n    {\n        modelName: 'wx-default', // model 名称\n        type: 'ide-login-scan' // 扫码类型\n    },\n    err => {\n        if (err) {\n            console.log(err); // 错误信息处理\n        }\n    }\n);\n\n"
+          "content": "作为 node 模块使用const QScan = require('qscan'); // 引入 qscan 工具\n// 实例化一个 scan 对象\nconst scan = new QScan({\n    // model 配置\n    modelOpts: {\n        'wx-default': { // model 名称\n            udid: 'HICMHMZTTW8DFI59', // 安卓设备 id，通过 adb service 命令查看\n            port: '4723', // 端口号\n            opts: {\n                user: 'xxx', // 微信用户名\n                pass: 'xxx' // 微信密码\n            }\n        }\n    }\n});\n我们实例化一个 QScan 对象，取名为 scan，这个对象有如下方法：scan.run({ modelName, type }, cb) 扫描二维码：scan.run(    {\n        modelName: 'wx-default', // model 名称\n        type: 'ide-login-scan' // 扫码类型\n    },\n    err => {\n        if (err) {\n            console.log(err); // 错误信息处理\n        }\n    }\n);\nscan.doctor(cb) 检查环境scan.loadModel({ model, udid, port, opts }) 传入 Model 名称和类型，执行扫码：scan.clone({ newModelName, oldModelName, opts }) 拷贝一份 Model"
         },
         {
           "title": "作为 koa/express 的中间件使用",
           "url": "/documents/usage.html#调用方式-作为-koaexpress-的中间件使用",
-          "content": "作为 koa/express 的中间件使用const Koa = require('Koa');const app = new Koa();\nconst QScan = require('qscan');\n\n// model 配置\nconst modelOpts = {\n    'wx-default': { // model 名称\n        udid: '3HX0217705004280',  // 安卓设备 id，通过 adb service 命令查看\n        port: '4723', // 端口号\n        opts: {\n            user: 'xxx', // 微信用户名\n            pass: 'xxx' // 微信密码\n        }\n    }\n}\n\n// 使用 QScan 的中间件，传入 model 名称与选项\napp.use(QScan.middleWare({\n    customModel: 'wx-default', // 配置 model 名称\n    modelOpts // 传入 model 选项\n}));\n\napp.listen(9001, function () {\n    console.log(`Port[9001] started! `);\n});\n"
+          "content": "作为 koa/express 的中间件使用const Koa = require('Koa');const app = new Koa();\nconst QScan = require('qscan');\n\n// model 配置\nconst modelOpts = {\n    'wx-default': { // model 名称\n        udid: '3HX0217705004280',  // 安卓设备 id，通过 adb service 命令查看\n        port: '4723', // 端口号\n        opts: {\n            user: 'xxx', // 微信用户名\n            pass: 'xxx' // 微信密码\n        }\n    }\n}\n\n// 使用 QScan 的中间件，传入 model 名称与选项\napp.use(QScan.middleWare({\n    modelOpts // 传入 model 选项\n}));\n\napp.listen(9001, function () {\n    console.log(`Port[9001] started! `);\n});\n"
+        },
+        {
+          "title": "自定义模式",
+          "url": "/documents/usage.html#自定义模式",
+          "content": "自定义模式QScan 提供了自定义模式"
         }
       ]
     }
