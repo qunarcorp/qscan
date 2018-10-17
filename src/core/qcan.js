@@ -161,7 +161,7 @@ class QScan extends EventEmitter {
 
                 if(model.udid) {
                     tasks.push( cb => {
-                        shelljs.exec(`adb -s ${model.udid} shell rm -r /sdcard/TBS`, { silent: true }, (code, stdout, stderr) => {
+                        shelljs.exec(`adb -s ${model.udid} shell rm -r -f /sdcard/tencent/tbs`, { silent: false }, (code, stdout, stderr) => {
                             if(code === 0) {
                                 logger.success('Delete TBS ok')
                                 cb(null)
@@ -206,9 +206,8 @@ class QScan extends EventEmitter {
         );
     }
     __clearTbsCache(cb) {
-        shelljs.exec('adb shell rm -r /sdcard/TBS', { silent: false }, () => {
-            cb();
-        });
+        shelljs.exec('adb shell rm -r -i /sdcard/TBS', { silent: true });
+        cb();
     }
     __loadModelFile({ modelFilePath, modelOpts }) {
         const model = require(modelFilePath);
@@ -266,9 +265,7 @@ class QScan extends EventEmitter {
         return ret;
     }
     __initModel(model) {
-        return this.__clearTbsCache(() => {
-            model.init(this.__initConnect(model), model.opts);
-        });
+        return model.init(this.__initConnect(model), model.opts);
     }
     __checkStatus(model, cb) {
         model.checkStatus(this.__initConnect(model), model.opts, cb);

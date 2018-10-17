@@ -17,7 +17,7 @@ module.exports = {
         } else {
             new QScan({
                 customModel: options.customModel || null,
-                runConfig: options.runConfig || null
+                modelOpts: options.runConfig || null
             }).run({
                 modelName: options.model,
                 type: options.type 

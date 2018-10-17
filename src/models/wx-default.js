@@ -5,7 +5,7 @@ const logger = require('../logger');
 const path = require('path');
 const fs = require('fs');
 
-const waitTimeout = 2000 * 1000;
+const waitTimeout = 30 * 1000;
 const checkElTimeout = 10 * 1000;
 
 module.exports = {
