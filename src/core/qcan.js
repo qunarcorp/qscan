@@ -193,9 +193,8 @@ class QScan extends EventEmitter {
         );
     }
     __clearTbsCache(cb) {
-        shelljs.exec('adb shell rm -r /sdcard/TBS', { silent: false }, () => {
-            cb();
-        });
+        shelljs.exec('adb shell rm -r -i /sdcard/TBS', { silent: true });
+        cb();
     }
     __loadModelFile({ modelFilePath, modelOpts }) {
         const model = require(modelFilePath);
@@ -253,9 +252,7 @@ class QScan extends EventEmitter {
         return ret;
     }
     __initModel(model) {
-        return this.__clearTbsCache(() => {
-            model.init(this.__initConnect(model), model.opts);
-        });
+        return model.init(this.__initConnect(model), model.opts);
     }
     __checkStatus(model, cb) {
         model.checkStatus(this.__initConnect(model), model.opts, cb);
