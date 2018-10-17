@@ -156,7 +156,20 @@ class QScan extends EventEmitter {
                     });
                 }
                 if (model.checkApp) {
-                    tasks.push(cb => model.checkApp(cb));
+                    tasks.push(cb => model.checkApp(cb, model.udid));
+                }
+
+                if(model.udid) {
+                    tasks.push( cb => {
+                        shelljs.exec(`adb -s ${model.udid} shell rm -r /sdcard/TBS`, { silent: true }, (code, stdout, stderr) => {
+                            if(code === 0) {
+                                logger.success('Delete TBS OK')
+                                cb(null)
+                            } else {
+                                cb(stderr)
+                            }
+                        });
+                    })
                 }
             }
         });
