@@ -8,9 +8,4 @@ QScan.middleWare = ({customModel, modelOpts}) => {
     };
 };
 
-// 服务
-QScan.serve = ({customModel, modelOpts, port, forever}) => {
-    // TODO
-};
-
 module.exports = QScan;
