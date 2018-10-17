@@ -123,13 +123,17 @@ class QScan extends EventEmitter {
                     tasks.push(cb => {
                         // TODO Check Devices
                         // model.udid
-                        if(!connectDevices.includes(model.udid)) {
+                        if (!connectDevices.includes(model.udid)) {
                             cb(`Can Not Found device: ${model.udid}`);
                             return;
                         }
-                        // appium -u 
-                        if(!devices.includes(model.udid)) {
-                            cb(`There is no appium server at devices: ${model.udid}`);
+                        // appium -u
+                        if (!devices.includes(model.udid)) {
+                            cb(
+                                `There is no appium server at devices: ${
+                                    model.udid
+                                }`
+                            );
                             return;
                         }
                         logger.success('The devices is ok');
@@ -140,7 +144,11 @@ class QScan extends EventEmitter {
                     tasks.push(cb => {
                         // TODO Check Appium Process
                         if (!ports.includes(model.port)) {
-                            cb(`There is no appium server at port: ${model.port}`);
+                            cb(
+                                `There is no appium server at port: ${
+                                    model.port
+                                }`
+                            );
                             return;
                         }
                         logger.success('The port is ok');
@@ -183,6 +191,11 @@ class QScan extends EventEmitter {
             this.models[oldModelName] || {},
             { opts }
         );
+    }
+    __clearTbsCache(cb) {
+        shelljs.exec('adb shell rm -r /sdcard/TBS', { silent: false }, () => {
+            cb();
+        });
     }
     __loadModelFile({ modelFilePath, modelOpts }) {
         const model = require(modelFilePath);
@@ -240,7 +253,9 @@ class QScan extends EventEmitter {
         return ret;
     }
     __initModel(model) {
-        return model.init(this.__initConnect(model), model.opts);
+        return this.__clearTbsCache(() => {
+            model.init(this.__initConnect(model), model.opts);
+        });
     }
     __checkStatus(model, cb) {
         model.checkStatus(this.__initConnect(model), model.opts, cb);
