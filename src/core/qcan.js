@@ -161,7 +161,7 @@ class QScan extends EventEmitter {
 
                 if(model.udid) {
                     tasks.push( cb => {
-                        shelljs.exec(`adb -s ${model.udid} shell rm -r /sdcard/TBS`, { silent: true }, (code, stdout, stderr) => {
+                        shelljs.exec(`adb -s ${model.udid} shell rm -r -f /sdcard/tencent/tbs`, { silent: false }, (code, stdout, stderr) => {
                             if(code === 0) {
                                 logger.success('Delete TBS OK')
                                 cb(null)
