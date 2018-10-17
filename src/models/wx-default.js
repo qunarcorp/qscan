@@ -31,17 +31,14 @@ module.exports = {
     // 检查 App 是否是相应的版本等
     checkApp: (cb, udid) => {
         const version = pkgJSON.support_wx_version;
-        const currentVersion = shelljs
+        let currentVersion = shelljs
             .exec(`adb -s ${udid} shell pm dump com.tencent.mm | grep "versionName"`, {
                 silent: true
             })
             .stdout.trim();
         // TODO
-        
-        if (
-            !currentVersion ||
-            currentVersion.match(/\w=([0-9.]+)/)[1] !== version
-        ) {
+        currentVersion = currentVersion && currentVersion.match(/\w=([0-9.]+)/)[1];
+        if (!currentVersion || currentVersion !== version) {
             logger.warn(`Need version-${version} wechat app`);
             logger.info(`installing ${version} wechat...`);
             // install wx 6.7.2
@@ -54,6 +51,14 @@ module.exports = {
                 shelljs.exec(`curl -o ${apksPath}/wx672.apk  ${apkLinePath}`);
             }
 
+            if(currentVersion > version) {
+                shelljs.exec(`adb -s ${udid} uninstall com.tencent.mm`, {silent: true}, (code, stdout, stderr) =>  {
+                    if(stderr) {
+                        cb(`Can Not Uninstall wechat-${currentVersion}, please uninstall manually`);
+                    }
+                })
+            }
+
             if (
                 shelljs.exec(`adb -s ${udid} install -r ${apksPath}/wx672.apk`, {
                     silent: true
@@ -62,7 +67,7 @@ module.exports = {
                 logger.success(`install wechat-${version} success`);
                 cb(null);
             } else {
-                cb(`Need wechat-${version}, please install manually`);
+                cb(`Need wechat-${version}, please install manually `);
             }
         } else {
             logger.success('The app version is ok');
