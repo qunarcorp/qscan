@@ -29,14 +29,15 @@ module.exports = {
     checkElTimeout,
 
     // 检查 App 是否是相应的版本等
-    checkApp: cb => {
+    checkApp: (cb, udid) => {
         const version = pkgJSON.support_wx_version;
         const currentVersion = shelljs
-            .exec('adb shell pm dump com.tencent.mm | grep "versionName"', {
+            .exec(`adb -s ${udid} shell pm dump com.tencent.mm | grep "versionName"`, {
                 silent: true
             })
             .stdout.trim();
         // TODO
+        
         if (
             !currentVersion ||
             currentVersion.match(/\w=([0-9.]+)/)[1] !== version
@@ -54,11 +55,11 @@ module.exports = {
             }
 
             if (
-                shelljs.exec(`adb install -r ${apksPath}/wx672.apk`, {
+                shelljs.exec(`adb -s ${udid} install -r ${apksPath}/wx672.apk`, {
                     silent: true
                 }).code === 0
             ) {
-                logger.info('install success');
+                logger.success(`install wechat-${version} success`);
                 cb(null);
             } else {
                 cb(`Need wechat-${version}, please install manually`);
