@@ -14,11 +14,6 @@ const scan = new QScan({
     }
 });
 
-// 我可以不吧model放到文件夹里让你读
-// 我自己读， 自己load不行吗
-// 包括 port，我自己控制端口，也行啊
-
-
 scan.clone({
     newModelName: 'another-model',
     oldModelName: 'wx-default',
@@ -30,8 +25,8 @@ scan.clone({
 //     udid: '123456',
 //     port: '4723',
 //     opts: {
-//         user: 'socutur',
-//         pass: 'Wangle539264'
+//         user: 'xxx',
+//         pass: 'xxx'
 //     }
 // });
 
