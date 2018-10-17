@@ -42,13 +42,22 @@
 <p>除此之外，你还可以开发自己的 <strong>扫码模式</strong>： <a href="usage.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%BC%8F">自定义模式</a></p>
 <h2 id="调用方式">调用方式</h2>
 <h3 id="调用方式-命令行调用">命令行调用</h3>
-<p>安装 QScan 后即可使用命令行调用，现在支持三个命令：</p>
+<p>全局安装 QScan 后即可使用命令行调用，现在支持三个命令：</p>
 <pre><code class="language-bash">Commands:
   doctor <span class="token punctuation">[</span>options<span class="token punctuation">]</span>  检查运行环境
   scan <span class="token punctuation">[</span>options<span class="token punctuation">]</span>    扫描二维码
   serve <span class="token punctuation">[</span>options<span class="token punctuation">]</span>   启动自助二维码扫描服务
 </code></pre>
-<h4>1. qscanscan 扫描二维码</h4>
+<h4>1. qscan doctor 检查运行环境</h4>
+<pre><code class="language-bash">Options:
+  -c, --customModel <span class="token operator">&lt;</span>customModel<span class="token operator">></span>  自定义模式路径，默认为空
+  -r, --runConfig <span class="token operator">&lt;</span>runConfig<span class="token operator">></span>      运行配置绝对路径，默认为 ~/.qscanrc
+  -h, --help                       output usage information
+</code></pre>
+<p>配置好 <code>~/.qscanrc</code> 后，执行：</p>
+<pre><code class="language-js">qscan doctor
+</code></pre>
+<h4>2. qscan scan 扫描二维码</h4>
 <pre><code class="language-bash">Options:
   -c, --customModel <span class="token operator">&lt;</span>customModel<span class="token operator">></span>  自定义模式路径，默认为空
   -r, --runConfig <span class="token operator">&lt;</span>runConfig<span class="token operator">></span>      运行配置，默认为 ~/.qscanrc
@@ -58,15 +67,6 @@
 </code></pre>
 <p>配置好 <code>~/.qscanrc</code> 后，执行：</p>
 <pre><code class="language-js">qscan scan <span class="token operator">-</span>m <span class="token string">'wx-default'</span> <span class="token operator">-</span>t <span class="token string">'ide-login-scan'</span>
-</code></pre>
-<h4>2. qscan doctor 扫描二维码</h4>
-<pre><code class="language-bash">Options:
-  -c, --customModel <span class="token operator">&lt;</span>customModel<span class="token operator">></span>  自定义模式路径，默认为空
-  -r, --runConfig <span class="token operator">&lt;</span>runConfig<span class="token operator">></span>      运行配置，默认为 ~/.qscanrc
-  -h, --help                       output usage information
-</code></pre>
-<p>配置好 <code>~/.qscanrc</code> 后，执行：</p>
-<pre><code class="language-js">qscan doctor
 </code></pre>
 <h3 id="调用方式-作为-node-模块使用">作为 node 模块使用</h3>
 <pre><code class="language-js"><span class="token keyword">const</span> QScan <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'qscan'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引入 qscan 工具</span>
@@ -87,7 +87,7 @@
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p>我们实例化一个 QScan 对象，取名为 scan，这个对象有如下方法：</p>
-<h4>scan.run({ modelName, type }, cb) 扫描二维码：</h4>
+<h4>scan.run({ modelName, type }, cb) 扫描二维码:</h4>
 <pre><code class="language-js">scan<span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span>
     <span class="token punctuation">{</span>
         modelName<span class="token punctuation">:</span> <span class="token string">'wx-default'</span><span class="token punctuation">,</span> <span class="token comment">// model 名称</span>
@@ -100,9 +100,32 @@
     <span class="token punctuation">}</span>
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<h4>scan.doctor(cb) 检查环境</h4>
-<h4>scan.loadModel({ model, udid, port, opts }) 传入 Model 名称和类型，执行扫码：</h4>
-<h4>scan.clone({ newModelName, oldModelName, opts }) 拷贝一份 Model</h4>
+<h4>scan.doctor(cb) 检查环境:</h4>
+<pre><code class="language-js">scan<span class="token punctuation">.</span><span class="token function">doctor</span><span class="token punctuation">(</span>err <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h4>scan.clone({ newModelName, oldModelName, opts }) 拷贝一份 Model，可以用 <code>opts</code> 对象覆盖一部分属性:</h4>
+<pre><code class="language-js">scan<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    newModelName<span class="token punctuation">:</span> <span class="token string">'another-model'</span><span class="token punctuation">,</span>
+    oldModelName<span class="token punctuation">:</span> <span class="token string">'wx-default'</span><span class="token punctuation">,</span>
+    opts<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h4>scan.loadModel({ model, udid, port, opts }) 自定义传入的 Model：</h4>
+<pre><code class="language-js"><span class="token keyword">const</span> myModel <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./myModel.js'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+scan<span class="token punctuation">.</span><span class="token function">loadModel</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    model<span class="token punctuation">:</span> myModel<span class="token punctuation">,</span>
+    udid<span class="token punctuation">:</span> <span class="token string">'3HX0217705004280'</span><span class="token punctuation">,</span>
+    port<span class="token punctuation">:</span> <span class="token string">'4723'</span><span class="token punctuation">,</span>
+    opts<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        user<span class="token punctuation">:</span> <span class="token string">'xxx'</span><span class="token punctuation">,</span>
+        pass<span class="token punctuation">:</span> <span class="token string">'xxx'</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <h3 id="调用方式-作为-koaexpress-的中间件使用">作为 koa/express 的中间件使用</h3>
 <pre><code class="language-js"><span class="token keyword">const</span> Koa <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'Koa'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Koa</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
