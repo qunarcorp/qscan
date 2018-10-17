@@ -205,6 +205,12 @@ class QScan extends EventEmitter {
             { opts }
         );
     }
+    abort() {
+        Object.keys(this.queues).forEach( queue => {
+            this.queues[queue].stop();
+        });
+        process.exit(1);
+    }
     __clearTbsCache(cb) {
         shelljs.exec('adb shell rm -r -i /sdcard/TBS', { silent: true });
         cb();
