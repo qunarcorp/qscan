@@ -5,9 +5,9 @@ const logger = require('../logger');
 const path = require('path');
 const fs = require('fs');
 
-// 可以根据手机运行速度进行调整
+//
 const waitTimeout = 30 * 1000; // 操作最长时间
-const checkElTimeout = 10 * 1000; // 判断元素是否存在的最长时间
+const checkElTimeout = 8 * 1000; // 判断元素是否存在 注:可以根据手机运行速度进行调整
 
 module.exports = {
     // Model Name 默认的微信的配置
@@ -41,7 +41,8 @@ module.exports = {
             )
             .stdout.trim();
         // TODO
-        currentVersion = currentVersion && currentVersion.match(/\w=([0-9.]+)/)[1];
+        currentVersion =
+            currentVersion && currentVersion.match(/\w=([0-9.]+)/)[1];
 
         if (!currentVersion || currentVersion !== version) {
             logger.warn(`Need version-${version} wechat app`);
@@ -93,7 +94,8 @@ module.exports = {
     checkStatus: (app, opts, cb) => {
         logger.primary('检测登录状态');
 
-        app.setImplicitWaitTimeout(checkElTimeout)
+        app.waitForElementByXPath('//android.widget.LinearLayout[1]')
+            .setImplicitWaitTimeout(checkElTimeout)
             .elementByXPathIfExists(CONST.TAB_4.xpath, (err, el) => {
                 if (el) {
                     logger.info('已登录! 检测账号是否一致');
@@ -153,21 +155,16 @@ module.exports = {
                 .click()
                 .elementByXPath(CONST.THE_SCAN_BTN.xpath)
                 .click()
-                .setImplicitWaitTimeout(checkElTimeout)
-                .waitForElementByXPath(CONST.LOGIN_FORM.xpath)
-                .elementByXPathIfExists(
-                    CONST.IDE_AFTER_SCAN_CONTENT.xpath,
-                    (err, el) => {
-                        if (el) {
-                            el.click();
-                        } else {
-                            app.elementByXPath(
-                                CONST.IDE_AFTER_SCAN_TEXT.xpath
-                            ).click();
-                        }
+                .elementByXPathIfExists(CONST.IDE_AFTER_SCAN_TEXT.xpath)
+                .then(el => {
+                    if (el) {
+                        el.click();
+                    } else {
+                        app.elementByXPath(
+                            CONST.IDE_AFTER_SCAN_CONTENT.xpath
+                        ).click();
                     }
-                )
-                .quit();
+                });
         },
         // 微信后台登录
         'backstage-login-scan': (app, opts, cb) => {
@@ -180,10 +177,21 @@ module.exports = {
                 .elementByXPath(CONST.THE_SCAN_BTN.xpath)
                 .click()
                 .waitForElementByXPath(CONST.MP_AFTER_SCAN.xpath)
-                .click()
-                .quit();
+                .click();
         }
     }
+};
+
+const has = (app, xpath, cb) => {
+    app.setImplicitWaitTimeout(1000)
+        .elementByXPathIfExists(xpath)
+        .then(el => {
+            if (el) {
+                has(app, xpath, cb);
+            } else {
+                cb();
+            }
+        });
 };
 
 // 初始化 App，从打开、登录到主界面

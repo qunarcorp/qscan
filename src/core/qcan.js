@@ -179,18 +179,20 @@ class QScan extends EventEmitter {
         }
         let task = {};
         this.queues[modelName].push(callback => {
-            this.__handleDevice({ modelName, type }, (err, app) => {
-                if(err) {
+            this.__handleDevice(
+                { modelName, type },
+                err => {
                     cb(err);
                     callback();
-                }
-            }, (app) => {
-                if(app) {
-                    task.stop = () => {
-                        app.quit();
+                },
+                app => {
+                    if (app) {
+                        task.stop = () => {
+                            app.quit();
+                        };
                     }
                 }
-            });
+            );
         });
         return task;
     }
@@ -271,16 +273,23 @@ class QScan extends EventEmitter {
                         cb(err);
                     } else {
                         // 检测登录状态并登录
-                        this.__checkStatus(model, (err, app) => {
-                            if (!err) {
-                                // 登录成功 可以直接扫码
-                                model.types[type](app, model.opts).catch(e => {
-                                    cb(e);
-                                });
-                            } else {
-                                cb(err, app);
-                            }
-                        }, quitCb);
+                        this.__checkStatus(
+                            model,
+                            (err, app) => {
+                                if (!err) {
+                                    // 登录成功 可以直接扫码
+                                    model.types[type](app, model.opts)
+                                        .quit()
+                                        .then(() => cb())
+                                        .catch(e => {
+                                            cb(e);
+                                        });
+                                } else {
+                                    cb(err, app);
+                                }
+                            },
+                            quitCb
+                        );
                     }
                 });
             } else {
