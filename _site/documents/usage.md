@@ -17,7 +17,7 @@ QScan 扫码需要一个配置，这个配置可以写在 ```~/.qscanrc``` 文�
             "user": "xxx", // 微信用户名
             "pass": "xxx" // 微信密码
         },
-        "checkApp": false // 校验是否安装微信 APP
+        "checkApp": false // 校验是否安装微信 APP 及其版本
     }
 }
 ```
