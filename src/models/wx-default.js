@@ -8,95 +8,6 @@ const fs = require('fs');
 const waitTimeout = 10 * 1000;
 const checkElTimeout = 3 * 1000;
 
-// 初始化 App，从打开、登录到主界面
-const init = (app, opts, cb) => {
-    logger.primary('首页登录');
-
-    app.setImplicitWaitTimeout(waitTimeout)
-        .elementByXPath(CONST.INDEX_LOGIN_BTN.xpath)
-        .click()
-        .then(() => login(app, opts, cb))
-        .catch(err => cb(err));
-};
-
-const login = (app, opts, cb) => {
-    logger.info('登录中...');
-
-    app.setImplicitWaitTimeout(waitTimeout)
-        .elementByXPath(CONST.USE_USER_AND_PASSWORD.xpath)
-        .click()
-        .elementByXPath(CONST.USERNAME_INPUT.xpath)
-        .sendKeys(opts.user)
-        .elementByXPath(CONST.PASSWORD_INPUT.xpath)
-        .sendKeys(opts.pass)
-        .elementByXPath(CONST.DO_LOGIN_BTN.xpath)
-        .click()
-        // 重新设置等待时间
-        .setImplicitWaitTimeout(checkElTimeout)
-        .elementByXPathIfExists(CONST.ALERT_OK.xpath, (err, el) => {
-            // 通讯录弹窗是否存在, 存在则点击确定
-            if (el) {
-                el.click();
-            }
-        })
-        .setImplicitWaitTimeout(waitTimeout)
-        .waitForElementByXPath(CONST.TAB_1.xpath)
-        .then(() => cb(null, app))
-        .catch(err => cb(err));
-};
-
-// 退出登录
-const logout = (app, cb) => {
-    logger.info('退出登录中...');
-    app.setImplicitWaitTimeout(waitTimeout)
-        .elementByXPath(CONST.TAB_4.xpath)
-        .click()
-        .elementsByXPath(CONST.THE_LIST_ELS.xpath, (err, els) => {
-            const el = els[els.length - 1];
-            el.click();
-        })
-        .elementByXPath(CONST.THE_LIST.xpath)
-        .flick(0, -500, 100)
-        .elementsByXPath(CONST.THE_LIST_ELS.xpath, (err, els) => {
-            const el = els[els.length - 1];
-            el.click();
-        })
-        .elementByXPath(CONST.SETTING_EXIT.xpath)
-        .click()
-        .waitForElementByXPath(CONST.ALERT_OK.xpath)
-        .click()
-        .then(() => cb(null, app))
-        .catch(err => cb(err));
-};
-
-// 重复登录
-const repeatLogin = (app, opts, cb) => {
-    logger.info('再次登录中...');
-
-    app.setImplicitWaitTimeout(waitTimeout)
-        .elementByXPath(CONST.PASSWORD_INPUT.xpath)
-        .sendKeys(opts.pass)
-        .elementByXPath(CONST.DO_LOGIN_BTN.xpath)
-        .click()
-        .setImplicitWaitTimeout(waitTimeout)
-        .waitForElementByXPath(CONST.TAB_1.xpath)
-        .then(() => cb(null, app))
-        .catch(err => cb(err));
-};
-
-// 重新登录
-const relogin = (app, opts, cb) => {
-    logger.info('重新登录中...');
-
-    app.setImplicitWaitTimeout(waitTimeout)
-        .elementByXPath(CONST.LOGIN_MORE.xpath)
-        .click()
-        .waitForElementByXPath(CONST.LOGIN_OTHER.xpath)
-        .click()
-        .then(() => login(app, opts, cb))
-        .catch(err => cb(err));
-};
-
 module.exports = {
     // Model Name 默认的微信的配置
     name: 'wx-default',
@@ -192,7 +103,7 @@ module.exports = {
                         .then(text => {
                             if (text === '微信号：' + opts.user) {
                                 logger.success('一致! 可扫码');
-                                cb(null, true, app);
+                                cb(null, app);
                             } else {
                                 logger.warn('不一致! 退出重新登录');
                                 logout(app, () => relogin(app, opts, cb));
@@ -260,4 +171,93 @@ module.exports = {
                 .quit();
         }
     }
+};
+
+// 初始化 App，从打开、登录到主界面
+const init = (app, opts, cb) => {
+    logger.primary('首页登录');
+
+    app.setImplicitWaitTimeout(waitTimeout)
+        .elementByXPath(CONST.INDEX_LOGIN_BTN.xpath)
+        .click()
+        .then(() => login(app, opts, cb))
+        .catch(err => cb(err));
+};
+
+const login = (app, opts, cb) => {
+    logger.info('登录中...');
+
+    app.setImplicitWaitTimeout(waitTimeout)
+        .elementByXPath(CONST.USE_USER_AND_PASSWORD.xpath)
+        .click()
+        .elementByXPath(CONST.USERNAME_INPUT.xpath)
+        .sendKeys(opts.user)
+        .elementByXPath(CONST.PASSWORD_INPUT.xpath)
+        .sendKeys(opts.pass)
+        .elementByXPath(CONST.DO_LOGIN_BTN.xpath)
+        .click()
+        // 重新设置等待时间
+        .setImplicitWaitTimeout(checkElTimeout)
+        .elementByXPathIfExists(CONST.ALERT_OK.xpath, (err, el) => {
+            // 通讯录弹窗是否存在, 存在则点击确定
+            if (el) {
+                el.click();
+            }
+        })
+        .setImplicitWaitTimeout(waitTimeout)
+        .waitForElementByXPath(CONST.TAB_1.xpath)
+        .then(() => cb(null, app))
+        .catch(err => cb(err));
+};
+
+// 退出登录
+const logout = (app, cb) => {
+    logger.info('退出登录中...');
+    app.setImplicitWaitTimeout(waitTimeout)
+        .elementByXPath(CONST.TAB_4.xpath)
+        .click()
+        .elementsByXPath(CONST.THE_LIST_ELS.xpath, (err, els) => {
+            const el = els[els.length - 1];
+            el.click();
+        })
+        .elementByXPath(CONST.THE_LIST.xpath)
+        .flick(0, -500, 100)
+        .elementsByXPath(CONST.THE_LIST_ELS.xpath, (err, els) => {
+            const el = els[els.length - 1];
+            el.click();
+        })
+        .elementByXPath(CONST.SETTING_EXIT.xpath)
+        .click()
+        .waitForElementByXPath(CONST.ALERT_OK.xpath)
+        .click()
+        .then(() => cb(null, app))
+        .catch(err => cb(err));
+};
+
+// 重复登录
+const repeatLogin = (app, opts, cb) => {
+    logger.info('再次登录中...');
+
+    app.setImplicitWaitTimeout(waitTimeout)
+        .elementByXPath(CONST.PASSWORD_INPUT.xpath)
+        .sendKeys(opts.pass)
+        .elementByXPath(CONST.DO_LOGIN_BTN.xpath)
+        .click()
+        .setImplicitWaitTimeout(waitTimeout)
+        .waitForElementByXPath(CONST.TAB_1.xpath)
+        .then(() => cb(null, app))
+        .catch(err => cb(err));
+};
+
+// 重新登录
+const relogin = (app, opts, cb) => {
+    logger.info('重新登录中...');
+
+    app.setImplicitWaitTimeout(waitTimeout)
+        .elementByXPath(CONST.LOGIN_MORE.xpath)
+        .click()
+        .waitForElementByXPath(CONST.LOGIN_OTHER.xpath)
+        .click()
+        .then(() => login(app, opts, cb))
+        .catch(err => cb(err));
 };
