@@ -128,7 +128,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "执行扫码服务",
           "url": "/usage/quickstart.html#执行扫码服务",
-          "content": "执行扫码服务执行下列代码，分别是指定的 Model 为 QScan 提供的微信扫码服务，type 类型为 ide-login-scan (微信开发者工具)qscan scan -m wx-default -t ide-login-scan可以看到手机上面自动登录并扫码成功，同时你可以在终端中看到对应的输出日志。一个最简单的扫码服务就跑起来了，除了使用命令行，你还可以使用 node 模块调用、或作为 koa/express 中间件调用，由于 QScan 的核心代码比较纯粹，因此你可以发挥想象力，将它应用在你的业务场景中。QScan 结合 Qunar 的实际应用场景，提供了一些使用方案，你可以在这里了解 QScan 的使用思路。"
+          "content": "执行扫码服务执行下列代码，分别是指定的 Model 为 QScan 提供的微信扫码服务，type 类型为 ide-login-scan (微信开发者工具)qscan scan -m wx-default -t ide-login-scan可以看到手机上面自动登录并扫码成功，同时你可以在终端中看到对应的输出日志。一个最简单的扫码服务就跑起来了，除了使用命令行，你还可以使用 node 模块调用、或作为 koa/express 中间件调用，由于 QScan 的核心代码比较纯粹，因此你可以发挥想象力，将它应用在你的业务场景中。我们结合 Qunar 的实际应用场景，提供了一些使用方案，你可以在这里了解 QScan 的使用思路。"
         }
       ]
     },
@@ -136,44 +136,35 @@ window.ydoc_plugin_search_json = {
       "title": "使用方案",
       "content": "这里列举一些使用方案的案例，你可以在这里了解 QScan 的使用思路。",
       "url": "/usage/scheme.html",
-      "children": []
+      "children": [
+        {
+          "title": "多台手机扫码",
+          "url": "/usage/scheme.html#多台手机扫码",
+          "content": "多台手机扫码"
+        }
+      ]
     }
   ],
   "前车之鉴": [
     {
-      "title": "推荐设备",
+      "title": "前车之鉴",
       "content": "由于市场上的安卓设备碎片化严重，Appium 调用设备的时候会遇到各种阻断，在这里我们推荐使用 红米 5 作为扫码设备。",
       "url": "/experience/index.html",
       "children": [
         {
-          "title": "注意事项",
-          "url": "/experience/index.html#注意事项",
-          "content": "注意事项\n"
+          "title": "使用技巧",
+          "url": "/experience/index.html#使用技巧",
+          "content": "使用技巧\n"
         },
         {
-          "title": "遇到的坑",
-          "url": "/experience/index.html#遇到的坑",
-          "content": "遇到的坑"
+          "title": "常见问题",
+          "url": "/experience/index.html#常见问题",
+          "content": "常见问题"
         },
         {
           "title": "1. 华为 Mate 9",
-          "url": "/experience/index.html#遇到的坑-1.-华为-mate-9",
+          "url": "/experience/index.html#常见问题-1.-华为-mate-9",
           "content": "1. 华为 Mate 9型号： MHA-AL00\n系统版本: EMUI 5.0 (基于 Android 7.0)\n"
-        },
-        {
-          "title": "2. OPPO R15",
-          "url": "/experience/index.html#遇到的坑-2.-oppo-r15",
-          "content": "2. OPPO R15型号\n系统版本\n"
-        },
-        {
-          "title": "3. 小米 3",
-          "url": "/experience/index.html#遇到的坑-3.-小米-3",
-          "content": "3. 小米 3\n型号\n\n\n系统版本\n\n"
-        },
-        {
-          "title": "4. Vivo",
-          "url": "/experience/index.html#遇到的坑-4.-vivo",
-          "content": "4. Vivo型号\n系统版本\n"
         }
       ]
     }

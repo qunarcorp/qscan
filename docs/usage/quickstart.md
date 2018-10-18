@@ -42,4 +42,4 @@ qscan scan -m wx-default -t ide-login-scan
 
 一个最简单的扫码服务就跑起来了，除了使用命令行，你还可以使用 node 模块调用、或作为 koa/express 中间件调用，由于 QScan 的核心代码比较纯粹，因此你可以发挥想象力，将它应用在你的业务场景中。
 
-QScan 结合 Qunar 的实际应用场景，提供了一些使用方案，你可以在这里了解 QScan 的使用思路。
+我们结合 Qunar 的实际应用场景，提供了一些[使用方案](./scheme.html)，你可以在这里了解 QScan 的使用思路。
