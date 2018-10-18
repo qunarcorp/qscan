@@ -38,8 +38,7 @@ module.exports = {
             .stdout.trim();
         // TODO
         currentVersion = currentVersion && currentVersion.match(/\w=([0-9.]+)/)[1];
-        console.log('@@#@#$#@$', currentVersion);
-        
+
         if (!currentVersion || currentVersion !== version) {
             logger.warn(`Need version-${version} wechat app`);
             logger.info(`installing ${version} wechat...`);
