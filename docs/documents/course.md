@@ -43,7 +43,6 @@ QScan 官方提供 Modal，指定 **扫码模式**，目前只支持微信扫码
 Commands:
   doctor [options]  检查运行环境
   scan [options]    扫描二维码
-  serve [options]   启动自助二维码扫描服务
 ```
 
 #### 1. qscan doctor 检查运行环境
