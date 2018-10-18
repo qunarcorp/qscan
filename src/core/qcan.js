@@ -212,7 +212,7 @@ class QScan extends EventEmitter {
         );
     }
     abort() {
-        Object.keys(this.queues).forEach( queue => {
+        Object.keys(this.queues).forEach(queue => {
             this.queues[queue].stop();
         });
         process.exit(1);
@@ -288,13 +288,9 @@ class QScan extends EventEmitter {
                         this.__checkStatus(model, (err, app) => {
                             if (!err) {
                                 // 登录成功 可以直接扫码
-                                model.types[type](app, model.opts)
-                                    .catch(e => {
-                                        cb(e);
-                                    })
-                                    .finally(() => {
-                                        cb(null);
-                                    });
+                                model.types[type](app, model.opts).catch(e => {
+                                    cb(e);
+                                });
                             } else {
                                 cb(err);
                             }

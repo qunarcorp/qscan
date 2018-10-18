@@ -5,8 +5,8 @@ const logger = require('../logger');
 const path = require('path');
 const fs = require('fs');
 
-const waitTimeout = 10 * 1000;
-const checkElTimeout = 3 * 1000;
+const waitTimeout = 30 * 1000;
+const checkElTimeout = 10 * 1000;
 
 module.exports = {
     // Model Name 默认的微信的配置
@@ -152,8 +152,20 @@ module.exports = {
                 .click()
                 .elementByXPath(CONST.THE_SCAN_BTN.xpath)
                 .click()
-                .waitForElementByXPath(CONST.IDE_AFTER_SCAN.xpath)
-                .click()
+                .setImplicitWaitTimeout(checkElTimeout)
+                .waitForElementByXPath(CONST.LOGIN_FORM.xpath)
+                .elementByXPathIfExists(
+                    CONST.IDE_AFTER_SCAN_CONTENT.xpath,
+                    (err, el) => {
+                        if (el) {
+                            el.click();
+                        } else {
+                            app.elementByXPath(
+                                CONST.IDE_AFTER_SCAN_TEXT.xpath
+                            ).click();
+                        }
+                    }
+                )
                 .quit();
         },
         // 微信后台登录

@@ -48,9 +48,13 @@ module.exports = {
         xpath:
             '//android.widget.LinearLayout[@resource-id="com.tencent.mm:id/jm"][@index=2]'
     },
-    IDE_AFTER_SCAN: {
+    IDE_AFTER_SCAN_TEXT: {
         name: 'ide扫码后确认',
         xpath: '//android.view.View[@text="确认登录"]'
+    },
+    IDE_AFTER_SCAN_CONTENT: {
+        name: 'ide扫码后确认',
+        xpath: '//android.view.View[@content-desc="确认登录"]'
     },
     MP_AFTER_SCAN: {
         name: 'mp扫码后确认',
@@ -82,5 +86,9 @@ module.exports = {
         name: '登录: 登录其他账号',
         xpath:
             '//android.support.v7.widget.RecyclerView[@resource-id="com.tencent.mm:id/chl"]/android.widget.LinearLayout[1]'
+    },
+    LOGIN_FORM: {
+        name: '扫码后登录表单',
+        xpath: '//android.view.View[@resource-id="loginform"]'
     }
 };
