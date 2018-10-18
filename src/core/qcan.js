@@ -85,7 +85,6 @@ class QScan extends EventEmitter {
             connectDevices = [];
         tasks.push(cb => {
             // TODO Check Appium
-
             if (!shelljs.which('appium')) {
                 cb('Not Found Appium');
             } else {
@@ -158,19 +157,6 @@ class QScan extends EventEmitter {
                 if (model.checkApp) {
                     tasks.push(cb => model.checkApp(cb, model.udid));
                 }
-
-                if(model.udid) {
-                    tasks.push( cb => {
-                        shelljs.exec(`adb -s ${model.udid} shell rm -r -f /sdcard/tencent/tbs`, { silent: false }, (code, stdout, stderr) => {
-                            if(code === 0) {
-                                logger.success('Delete TBS ok')
-                                cb(null)
-                            } else {
-                                cb(stderr)
-                            }
-                        });
-                    })
-                }
             }
         });
         async.series(tasks, cb);
@@ -191,12 +177,22 @@ class QScan extends EventEmitter {
         if (!this.queues[modelName]) {
             this.queues[modelName] = new Queue(QUEUE_OPTS);
         }
+        let task = {};
         this.queues[modelName].push(callback => {
-            this.__handleDevice({ modelName, type }, err => {
-                cb(err);
-                callback();
+            this.__handleDevice({ modelName, type }, (err, app) => {
+                if(err) {
+                    cb(err);
+                    callback();
+                }
+            }, (app) => {
+                if(app) {
+                    task.stop = () => {
+                        app.quit();
+                    }
+                }
             });
         });
+        return task;
     }
     clone({ newModelName, oldModelName, opts }) {
         this.models[newModelName] = Object.assign(
@@ -204,16 +200,6 @@ class QScan extends EventEmitter {
             this.models[oldModelName] || {},
             { opts }
         );
-    }
-    abort() {
-        Object.keys(this.queues).forEach( queue => {
-            this.queues[queue].stop();
-        });
-        // process.exit(1);
-    }
-    __clearTbsCache(cb) {
-        shelljs.exec('adb shell rm -r -i /sdcard/TBS', { silent: true });
-        cb();
     }
     __loadModelFile({ modelFilePath, modelOpts }) {
         const model = require(modelFilePath);
@@ -270,13 +256,12 @@ class QScan extends EventEmitter {
 
         return ret;
     }
-    __initModel(model) {
-        return model.init(this.__initConnect(model), model.opts);
+    __checkStatus(model, cb, quitCb) {
+        const app = this.__initConnect(model);
+        quitCb(app);
+        model.checkStatus(app, model.opts, cb);
     }
-    __checkStatus(model, cb) {
-        model.checkStatus(this.__initConnect(model), model.opts, cb);
-    }
-    __handleDevice({ modelName, type }, cb) {
+    __handleDevice({ modelName, type }, cb, quitCb) {
         const model = this.models[modelName];
 
         if (model) {
@@ -285,37 +270,21 @@ class QScan extends EventEmitter {
                     if (err) {
                         cb(err);
                     } else {
-                        // 检测登录状态
-                        this.__checkStatus(model, (err, flag, app) => {
+                        // 检测登录状态并登录
+                        this.__checkStatus(model, (err, app) => {
                             if (!err) {
-                                if (flag) {
-                                    // 可以直接扫码
-                                    model.types[type](app, model.opts)
-                                        .catch(e => {
-                                            cb(e);
-                                        })
-                                        .finally(() => {
-                                            cb(null);
-                                        });
-                                } else {
-                                    // 重新登录并扫码
-                                    model.types[type](
-                                        this.__initModel(model),
-                                        model.opts
-                                    )
-                                        .catch(e => {
-                                            cb(e);
-                                        })
-                                        .finally(() => {
-                                            cb(null);
-                                        });
-                                }
+                                // 登录成功 可以直接扫码
+                                model.types[type](app, model.opts)
+                                    .catch(e => {
+                                        cb(e, app);
+                                    })
+                                    .finally(() => {
+                                        cb(null, app);
+                                    });
                             } else {
-                                // 尝试再检测
-                                cb(err);
-                                // this.__handleDevice({ modelName, type }, cb);
+                                cb(err, app);
                             }
-                        });
+                        }, quitCb);
                     }
                 });
             } else {
