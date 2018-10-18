@@ -4,13 +4,6 @@
       <div class="m-search-result js-search-result"></div>
     </div></div><nav class="m-header-nav js-nav"><ul class="m-header-items"><li class="item "><a class="href" href="../documents/index.html">文档</a></li><li class="item active"><a class="href" href="index.html">方案</a></li><li class="item "><a class="href" href="../experience/index.html">前车之鉴</a></li></ul></nav><div id="js-nav-btn" class="m-header-btn ui-font-ydoc"></div></header><div class="m-content" id="js-content"><div id="markdown-body" class="m-content-container markdown-body"><h1>快速起步</h1>
 <p>确定你已经验证环境之后，这里是一个最简案例：使用 QScan 扫码登录微信开发者工具，使用命令行的方式调用扫码服务，请安装 微信开发者工具，</p>
-<h3 id="连接设备并启动">连接设备并启动</h3>
-<ul>
-<li>手机连接电脑，打开终端，执行 <code>adb devices</code> 查看该设备的 id</li>
-<li>使用 Appium 启动一个进程，并设置端口 (这里设置为4723)，启动后 Appium 即可控制手机：</li>
-</ul>
-<pre><code class="language-bash">appium -U 3HX0217705004280 -p 4723
-</code></pre>
 <h3 id="填写配置">填写配置</h3>
 <p>编辑 ~/.qscanrc 文件，填写<a href="../documents/course.html#%E9%85%8D%E7%BD%AE">配置</a></p>
 <pre><code class="language-bash"><span class="token function">vi</span> ~/.qscanrc
@@ -29,7 +22,15 @@
 </code></pre>
 <h3 id="检查运行环境">检查运行环境</h3>
 <p>全局安装 QScan 后，执行 <code>qscan doctor</code> 检测上面的配置，确保所有的输出都是 <code>✔ SUCCESS</code></p>
-<h3 id=""></h3>
+<h3 id="打开微信开发者工具">打开微信开发者工具</h3>
+<p>打开微信开发者工具的登录页，调整好位置，等待被扫码</p>
+<h3 id="执行扫码服务">执行扫码服务</h3>
+<p>执行下列代码，分别是指定的 Model 为 QScan 提供的微信扫码服务，type 类型为 ide-login-scan (微信开发者工具)</p>
+<pre><code class="language-bash">qscan scan -m wx-default -t ide-login-scan
+</code></pre>
+<p>可以看到手机上面自动登录并扫码成功，同时你可以在终端中看到对应的输出日志。</p>
+<p>一个最简单的扫码服务就跑起来了，除了使用命令行，你还可以使用 node 模块调用、或作为 koa/express 中间件调用，由于 QScan 的核心代码比较纯粹，因此你可以发挥想象力，将它应用在你的业务场景中。</p>
+<p>QScan 结合 Qunar 的实际应用场景，提供了一些使用方案，你可以在这里了解 QScan 的使用思路。</p>
 </div><div class="m-content-container m-paging"><div class="m-paging-prev m-paging-item"><a href="index.html" class="href"><span class="ui-font-ydoc"></span>方案</a></div><div class="m-paging-next m-paging-item"><a href="scheme.html" class="href">使用方案<span class="ui-font-ydoc"></span></a></div></div></div></div></div><div></div><script>
     var $content = document.getElementById('js-content');
     var $summaryItems = Array.prototype.slice.call(document.querySelectorAll('#js-menu .href'));

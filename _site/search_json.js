@@ -101,7 +101,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "验证环境",
           "url": "/usage/index.html#验证环境",
-          "content": "验证环境设备准备好之后，请准备好下列软硬件环境：1. 手机状态 关闭锁屏，关闭自动息屏，息屏状态无法唤起 Appium 扫码\n 开启开发者模式\n 将手机与电脑相连，并将手机固定在电脑前\n2. 微信状态 确认账号是可登陆状态，首次登陆需要进行身份验证\n 禁用 X5 内核: 在微信中打开 debugtbs.qq.com, 在 tbs 调试页面中禁用内核（这是因为 Appium 无法获取基于 X5 内核页面中的元素，也就无法完成点击操作）\n3. 物理环境 确保扫码的环境不会出现强烈的光照或其他遮挡物，光照会引起反光影响扫码\n 尽量保证扫码设备不被人为干扰，例如使用围栏、警示标语等\n4. QScan 环境 阅读 安装依赖 和 教程 ，写好配置后使用 doctor 命令检查运行环境\n"
+          "content": "验证环境设备准备好之后，请 务必 准备好下列软硬件环境：1. 手机状态 关闭锁屏，关闭自动息屏，息屏状态无法唤起 Appium 扫码\n 开启开发者模式\n 将手机与电脑相连，并将手机固定在电脑前\n2. 微信状态 确认账号是可登陆状态，首次登陆需要进行身份验证\n 禁用 X5 内核: 在微信中打开 debugtbs.qq.com, 在 tbs 调试页面中禁用内核（这是因为 Appium 无法获取基于 X5 内核页面中的元素，也就无法完成点击操作）\n3. 物理环境 确保扫码的环境不会出现强烈的光照或其他遮挡物，光照会引起反光影响扫码\n 尽量保证扫码设备不被人为干扰，例如使用围栏、警示标语等\n4. QScan 环境 阅读 安装依赖 和 教程 ，写好配置后使用 doctor 命令检查运行环境\n"
         }
       ]
     },
@@ -110,11 +110,6 @@ window.ydoc_plugin_search_json = {
       "content": "确定你已经验证环境之后，这里是一个最简案例：使用 QScan 扫码登录微信开发者工具，使用命令行的方式调用扫码服务，请安装\b 微信开发者工具，",
       "url": "/usage/quickstart.html",
       "children": [
-        {
-          "title": "连接设备并启动",
-          "url": "/usage/quickstart.html#连接设备并启动",
-          "content": "连接设备并启动手机连接电脑，打开终端，执行 adb devices 查看该设备的 id\n使用 Appium 启动一个进程，并设置端口 (这里设置为4723)，启动后 Appium 即可控制手机：\nappium -U 3HX0217705004280 -p 4723"
-        },
         {
           "title": "填写配置",
           "url": "/usage/quickstart.html#填写配置",
@@ -126,9 +121,14 @@ window.ydoc_plugin_search_json = {
           "content": "检查运行环境全局安装 QScan 后，执行 qscan doctor 检测上面的配置，确保所有的输出都是 ✔ SUCCESS"
         },
         {
-          "title": "",
-          "url": "/usage/quickstart.html#",
-          "content": ""
+          "title": "打开微信开发者工具",
+          "url": "/usage/quickstart.html#打开微信开发者工具",
+          "content": "打开微信开发者工具打开微信开发者工具的登录页，调整好位置，等待被扫码"
+        },
+        {
+          "title": "执行扫码服务",
+          "url": "/usage/quickstart.html#执行扫码服务",
+          "content": "执行扫码服务执行下列代码，分别是指定的 Model 为 QScan 提供的微信扫码服务，type 类型为 ide-login-scan (微信开发者工具)qscan scan -m wx-default -t ide-login-scan可以看到手机上面自动登录并扫码成功，同时你可以在终端中看到对应的输出日志。一个最简单的扫码服务就跑起来了，除了使用命令行，你还可以使用 node 模块调用、或作为 koa/express 中间件调用，由于 QScan 的核心代码比较纯粹，因此你可以发挥想象力，将它应用在你的业务场景中。QScan 结合 Qunar 的实际应用场景，提供了一些使用方案，你可以在这里了解 QScan 的使用思路。"
         }
       ]
     },
