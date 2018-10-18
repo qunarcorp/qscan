@@ -57,7 +57,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "配置",
           "url": "/documents/course.html#配置",
-          "content": "配置QScan 扫码需要一个配置，这个配置可以写在 ~/.qscanrc 文件中，也可以写在代码中，这个配置的格式如下：{    \"wx-default\": { // key 值为 Modal 名称\n        \"udid\": \"HICMHMZTTW8DFI59\", // 安卓设备 id，通过 adb service 命令查看\n        \"port\": \"4723\", // 端口号\n        \"opts\": {\n            \"user\": \"xxx\", // 微信用户名\n            \"pass\": \"xxx\" // 微信密码\n        },\n        \"checkApp\": false // 校验是否安装微信 APP\n    }\n}\nQScan 官方提供 Modal，指定 扫码模式，目前只支持微信扫码："
+          "content": "配置QScan 扫码需要一个配置，这个配置可以写在 ~/.qscanrc 文件中，也可以写在代码中，这个配置的格式如下：{    \"wx-default\": { // key 值为 Modal 名称\n        \"udid\": \"HICMHMZTTW8DFI59\", // 安卓设备 id，通过 adb service 命令查看\n        \"port\": \"4723\", // 端口号\n        \"opts\": {\n            \"user\": \"xxx\", // 微信用户名\n            \"pass\": \"xxx\" // 微信密码\n        },\n        \"checkApp\": false // 校验是否安装微信 APP 及其版本\n    }\n}\n注意：微信用户名必需使用微信号，禁止使用手机号QScan 官方提供 Modal，指定 扫码模式，目前只支持微信扫码："
         },
         {
           "title": "wx-default (微信扫码)",
@@ -95,13 +95,46 @@ window.ydoc_plugin_search_json = {
   "方案": [
     {
       "title": "开始之前",
-      "content": "在开始之前，请确定已经准备好了下列设备：一台 macOS 的设备，苹果电脑或者垃圾桶\n一台安卓设备，推荐使用红米5\n一个懒人支架，用于固定扫码设备\n安装 QScan 工具，使用 doctor 命令验证环境",
+      "content": "在开始之前，请确定已经准备好了下列设备和账号：一台 macOS 的设备，苹果电脑\n一台安卓设备，推荐使用红米5\n一个懒人支架，或者其他能够固定扫码设备的装置\n一个微信账号，由于用于扫码，因此最好是不常用的账号或小号（微信号首次登录新设备时，需要手动进行身份验证）\n",
       "url": "/usage/index.html",
-      "children": []
+      "children": [
+        {
+          "title": "验证环境",
+          "url": "/usage/index.html#验证环境",
+          "content": "验证环境设备准备好之后，请 务必 准备好下列软硬件环境：1. 手机状态 关闭锁屏，关闭自动息屏，息屏状态无法唤起 Appium 扫码\n 开启开发者模式\n 将手机与电脑相连，并将手机固定在电脑前\n2. 微信状态 确认账号是可登陆状态，首次登陆需要进行身份验证\n 禁用 X5 内核: 在微信中打开 debugtbs.qq.com, 在 tbs 调试页面中禁用内核（这是因为 Appium 无法获取基于 X5 内核页面中的元素，也就无法完成点击操作）\n3. 物理环境 确保扫码的环境不会出现强烈的光照或其他遮挡物，光照会引起反光影响扫码\n 尽量保证扫码设备不被人为干扰，例如使用围栏、警示标语等\n4. QScan 环境 阅读 配置 ，写好配置后使用 doctor 命令检查运行环境\n"
+        }
+      ]
     },
     {
-      "title": "",
-      "content": "",
+      "title": "快速起步",
+      "content": "确定你已经验证环境之后，这里是一个最简案例：使用 QScan 扫码登录微信开发者工具，使用命令行的方式调用扫码服务，请安装\b 微信开发者工具，",
+      "url": "/usage/quickstart.html",
+      "children": [
+        {
+          "title": "填写配置",
+          "url": "/usage/quickstart.html#填写配置",
+          "content": "填写配置编辑 ~/.qscanrc 文件，填写配置vi ~/.qscanrc{    \"wx-default\": { // key 值为 Modal 名称\n        \"udid\": \"HICMHMZTTW8DFI59\", // 安卓设备 id，通过 adb service 命令查看\n        \"port\": \"4723\", // 端口号，这里设置为 4723\n        \"opts\": {\n            \"user\": \"xxx\", // 微信用户名\n            \"pass\": \"xxx\" // 微信密码\n        },\n        \"checkApp\": true // 校验是否安装微信 APP 及其版本 \n    }\n}\n"
+        },
+        {
+          "title": "检查运行环境",
+          "url": "/usage/quickstart.html#检查运行环境",
+          "content": "检查运行环境全局安装 QScan 后，执行 qscan doctor 检测上面的配置，确保所有的输出都是 ✔ SUCCESS"
+        },
+        {
+          "title": "打开微信开发者工具",
+          "url": "/usage/quickstart.html#打开微信开发者工具",
+          "content": "打开微信开发者工具打开微信开发者工具的登录页，调整好位置，等待被扫码"
+        },
+        {
+          "title": "执行扫码服务",
+          "url": "/usage/quickstart.html#执行扫码服务",
+          "content": "执行扫码服务执行下列代码，分别是指定的 Model 为 QScan 提供的微信扫码服务，type 类型为 ide-login-scan (微信开发者工具)qscan scan -m wx-default -t ide-login-scan可以看到手机上面自动登录并扫码成功，同时你可以在终端中看到对应的输出日志。一个最简单的扫码服务就跑起来了，除了使用命令行，你还可以使用 node 模块调用、或作为 koa/express 中间件调用，由于 QScan 的核心代码比较纯粹，因此你可以发挥想象力，将它应用在你的业务场景中。QScan 结合 Qunar 的实际应用场景，提供了一些使用方案，你可以在这里了解 QScan 的使用思路。"
+        }
+      ]
+    },
+    {
+      "title": "使用方案",
+      "content": "这里列举一些使用方案的案例，你可以在这里了解 QScan 的使用思路。",
       "url": "/usage/scheme.html",
       "children": []
     }
@@ -112,6 +145,11 @@ window.ydoc_plugin_search_json = {
       "content": "由于市场上的安卓设备碎片化严重，Appium 调用设备的时候会遇到各种阻断，在这里我们推荐使用 红米 5 作为扫码设备。",
       "url": "/experience/index.html",
       "children": [
+        {
+          "title": "注意事项",
+          "url": "/experience/index.html#注意事项",
+          "content": "注意事项\n"
+        },
         {
           "title": "遇到的坑",
           "url": "/experience/index.html#遇到的坑",
@@ -130,7 +168,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "3. 小米 3",
           "url": "/experience/index.html#遇到的坑-3.-小米-3",
-          "content": "3. 小米 3型号\n系统版本\n"
+          "content": "3. 小米 3\n型号\n\n\n系统版本\n\n"
         },
         {
           "title": "4. Vivo",

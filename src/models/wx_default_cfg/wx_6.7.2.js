@@ -50,7 +50,7 @@ module.exports = {
     },
     IDE_AFTER_SCAN_TEXT: {
         name: 'ide扫码后确认',
-        xpath: '//android.view.View[@text="确认登录"]'
+        xpath: '//android.view.View[@content-desc="确认登录"]'
     },
     IDE_AFTER_SCAN_CONTENT: {
         name: 'ide扫码后确认',
