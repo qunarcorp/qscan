@@ -57,7 +57,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "配置",
           "url": "/documents/course.html#配置",
-          "content": "配置QScan 扫码需要一个配置，这个配置可以写在 ~/.qscanrc 文件中，也可以写在代码中，这个配置的格式如下：{    \"wx-default\": { // key 值为 Modal 名称\n        \"udid\": \"HICMHMZTTW8DFI59\", // 安卓设备 id，通过 adb service 命令查看\n        \"port\": \"4723\", // 端口号\n        \"opts\": {\n            \"user\": \"xxx\", // 微信用户名\n            \"pass\": \"xxx\" // 微信密码\n        },\n        \"checkApp\": false // 校验是否安装微信 APP\n    }\n}\nQScan 官方提供 Modal，指定 扫码模式，目前只支持微信扫码："
+          "content": "配置QScan 扫码需要一个配置，这个配置可以写在 ~/.qscanrc 文件中，也可以写在代码中，这个配置的格式如下：{    \"wx-default\": { // key 值为 Modal 名称\n        \"udid\": \"HICMHMZTTW8DFI59\", // 安卓设备 id，通过 adb service 命令查看\n        \"port\": \"4723\", // 端口号\n        \"opts\": {\n            \"user\": \"xxx\", // 微信用户名\n            \"pass\": \"xxx\" // 微信密码\n        },\n        \"checkApp\": false // 校验是否安装微信 APP 及其版本\n    }\n}\n注意：微信用户名必需使用微信号，禁止使用手机号QScan 官方提供 Modal，指定 扫码模式，目前只支持微信扫码："
         },
         {
           "title": "wx-default (微信扫码)",
@@ -95,9 +95,42 @@ window.ydoc_plugin_search_json = {
   "方案": [
     {
       "title": "开始之前",
-      "content": "在开始之前，请确定已经准备好了下列设备：一台 macOS 的设备，苹果电脑或者垃圾桶\n一台安卓设备，推荐使用红米5\n一个懒人支架，用于固定扫码设备\n安装 QScan 工具，使用 doctor 命令验证环境",
+      "content": "在开始之前，请确定已经准备好了下列设备和账号：一台 macOS 的设备，苹果电脑\n一台安卓设备，推荐使用红米5\n一个懒人支架，或者其他能够固定扫码设备的装置\n一个微信账号，由于用于扫码，因此最好是不常用的账号或小号（微信号首次登录新设备时，需要手动进行身份验证）\n",
       "url": "/usage/index.html",
-      "children": []
+      "children": [
+        {
+          "title": "验证环境",
+          "url": "/usage/index.html#验证环境",
+          "content": "验证环境设备准备好之后，请准备好下列软硬件环境：1. 手机状态 关闭锁屏，关闭自动息屏，息屏状态无法唤起 Appium 扫码\n 开启开发者模式\n 将手机与电脑相连，并将手机固定在电脑前\n2. 微信状态 确认账号是可登陆状态，首次登陆需要进行身份验证\n 禁用 X5 内核: 在微信中打开 debugtbs.qq.com, 在 tbs 调试页面中禁用内核（这是因为 Appium 无法获取基于 X5 内核页面中的元素，也就无法完成点击操作）\n3. 物理环境 确保扫码的环境不会出现强烈的光照或其他遮挡物，光照会引起反光影响扫码\n 尽量保证扫码设备不被人为干扰，例如使用围栏、警示标语等\n4. QScan 环境 阅读 安装依赖 和 教程 ，写好配置后使用 doctor 命令检查运行环境\n"
+        }
+      ]
+    },
+    {
+      "title": "快速起步",
+      "content": "确定你已经验证环境之后，这里是一个最简案例：使用 QScan 扫码登录微信开发者工具，使用命令行的方式调用扫码服务，请安装\b 微信开发者工具，",
+      "url": "/usage/quickstart.html",
+      "children": [
+        {
+          "title": "连接设备并启动",
+          "url": "/usage/quickstart.html#连接设备并启动",
+          "content": "连接设备并启动手机连接电脑，打开终端，执行 adb devices 查看该设备的 id\n使用 Appium 启动一个进程，并设置端口 (这里设置为4723)，启动后 Appium 即可控制手机：\nappium -U 3HX0217705004280 -p 4723"
+        },
+        {
+          "title": "填写配置",
+          "url": "/usage/quickstart.html#填写配置",
+          "content": "填写配置编辑 ~/.qscanrc 文件，填写配置vi ~/.qscanrc{    \"wx-default\": { // key 值为 Modal 名称\n        \"udid\": \"HICMHMZTTW8DFI59\", // 安卓设备 id，通过 adb service 命令查看\n        \"port\": \"4723\", // 端口号，这里设置为 4723\n        \"opts\": {\n            \"user\": \"xxx\", // 微信用户名\n            \"pass\": \"xxx\" // 微信密码\n        },\n        \"checkApp\": true // 校验是否安装微信 APP 及其版本 \n    }\n}\n"
+        },
+        {
+          "title": "检查运行环境",
+          "url": "/usage/quickstart.html#检查运行环境",
+          "content": "检查运行环境全局安装 QScan 后，执行 qscan doctor 检测上面的配置，确保所有的输出都是 ✔ SUCCESS"
+        },
+        {
+          "title": "",
+          "url": "/usage/quickstart.html#",
+          "content": ""
+        }
+      ]
     },
     {
       "title": "使用方案",
