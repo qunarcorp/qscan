@@ -155,16 +155,8 @@ module.exports = {
                 .click()
                 .elementByXPath(CONST.THE_SCAN_BTN.xpath)
                 .click()
-                .elementByXPathIfExists(CONST.IDE_AFTER_SCAN_TEXT.xpath)
-                .then(el => {
-                    if (el) {
-                        el.click();
-                    } else {
-                        app.elementByXPath(
-                            CONST.IDE_AFTER_SCAN_CONTENT.xpath
-                        ).click();
-                    }
-                });
+                .waitForElementByXPath(CONST.IDE_AFTER_SCAN.xpath)
+                .click();
         },
         // 微信后台登录
         'backstage-login-scan': (app, opts, cb) => {

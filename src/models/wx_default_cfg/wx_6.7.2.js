@@ -48,13 +48,10 @@ module.exports = {
         xpath:
             '//android.widget.LinearLayout[@resource-id="com.tencent.mm:id/jm"][@index=2]'
     },
-    IDE_AFTER_SCAN_TEXT: {
+    IDE_AFTER_SCAN: {
         name: 'ide扫码后确认',
-        xpath: '//android.view.View[@content-desc="确认登录"]'
-    },
-    IDE_AFTER_SCAN_CONTENT: {
-        name: 'ide扫码后确认',
-        xpath: '//android.view.View[@content-desc="确认登录"]'
+        xpath:
+            '//android.view.View[@content-desc="确认登录" or @text="确认登录"]'
     },
     MP_AFTER_SCAN: {
         name: 'mp扫码后确认',
