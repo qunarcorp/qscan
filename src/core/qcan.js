@@ -159,17 +159,23 @@ class QScan extends EventEmitter {
                     tasks.push(cb => model.checkApp(cb, model.udid));
                 }
 
-                if(model.udid) {
-                    tasks.push( cb => {
-                        shelljs.exec(`adb -s ${model.udid} shell rm -r -f /sdcard/tencent/tbs`, { silent: false }, (code, stdout, stderr) => {
-                            if(code === 0) {
-                                logger.success('Delete TBS ok')
-                                cb(null)
-                            } else {
-                                cb(stderr)
+                if (model.udid) {
+                    tasks.push(cb => {
+                        shelljs.exec(
+                            `adb -s ${
+                                model.udid
+                            } shell rm -r -f /sdcard/tencent/tbs`,
+                            { silent: false },
+                            (code, stdout, stderr) => {
+                                if (code === 0) {
+                                    logger.success('Delete TBS ok');
+                                    cb(null);
+                                } else {
+                                    cb(stderr);
+                                }
                             }
-                        });
-                    })
+                        );
+                    });
                 }
             }
         });
@@ -204,10 +210,6 @@ class QScan extends EventEmitter {
             this.models[oldModelName] || {},
             { opts }
         );
-    }
-    __clearTbsCache(cb) {
-        shelljs.exec('adb shell rm -r -i /sdcard/TBS', { silent: true });
-        cb();
     }
     __loadModelFile({ modelFilePath, modelOpts }) {
         const model = require(modelFilePath);
@@ -264,9 +266,6 @@ class QScan extends EventEmitter {
 
         return ret;
     }
-    __initModel(model) {
-        return model.init(this.__initConnect(model), model.opts);
-    }
     __checkStatus(model, cb) {
         model.checkStatus(this.__initConnect(model), model.opts, cb);
     }
@@ -279,35 +278,19 @@ class QScan extends EventEmitter {
                     if (err) {
                         cb(err);
                     } else {
-                        // 检测登录状态
-                        this.__checkStatus(model, (err, flag, app) => {
+                        // 检测登录状态并登录
+                        this.__checkStatus(model, (err, app) => {
                             if (!err) {
-                                if (flag) {
-                                    // 可以直接扫码
-                                    model.types[type](app, model.opts)
-                                        .catch(e => {
-                                            cb(e);
-                                        })
-                                        .finally(() => {
-                                            cb(null);
-                                        });
-                                } else {
-                                    // 重新登录并扫码
-                                    model.types[type](
-                                        this.__initModel(model),
-                                        model.opts
-                                    )
-                                        .catch(e => {
-                                            cb(e);
-                                        })
-                                        .finally(() => {
-                                            cb(null);
-                                        });
-                                }
+                                // 登录成功 可以直接扫码
+                                model.types[type](app, model.opts)
+                                    .catch(e => {
+                                        cb(e);
+                                    })
+                                    .finally(() => {
+                                        cb(null);
+                                    });
                             } else {
-                                // 尝试再检测
                                 cb(err);
-                                // this.__handleDevice({ modelName, type }, cb);
                             }
                         });
                     }
