@@ -26,4 +26,4 @@
 - [x] 尽量保证扫码设备不被人为干扰，例如使用围栏、警示标语等
 
 #### 4. QScan 环境
-- [x] 阅读 [安装依赖](../documents/install.html) 和 [教程](../documents/course.html) ，写好配置后使用 ```doctor``` 命令检查运行环境
+- [x] 阅读 [配置](/documents/course.html#配置) ，写好配置后使用 ```doctor``` 命令检查运行环境
