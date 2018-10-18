@@ -211,6 +211,12 @@ class QScan extends EventEmitter {
             { opts }
         );
     }
+    abort() {
+        Object.keys(this.queues).forEach( queue => {
+            this.queues[queue].stop();
+        });
+        process.exit(1);
+    }
     __loadModelFile({ modelFilePath, modelOpts }) {
         const model = require(modelFilePath);
         const opts = modelOpts[model.name || 'default'] || {};
