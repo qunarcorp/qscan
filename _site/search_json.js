@@ -100,8 +100,8 @@ window.ydoc_plugin_search_json = {
       "children": []
     },
     {
-      "title": "",
-      "content": "",
+      "title": "使用方案",
+      "content": "这里列举一些使用方案的案例，你可以在这里了解 QScan 的使用思路。",
       "url": "/usage/scheme.html",
       "children": []
     }
@@ -112,6 +112,11 @@ window.ydoc_plugin_search_json = {
       "content": "由于市场上的安卓设备碎片化严重，Appium 调用设备的时候会遇到各种阻断，在这里我们推荐使用 红米 5 作为扫码设备。",
       "url": "/experience/index.html",
       "children": [
+        {
+          "title": "注意事项",
+          "url": "/experience/index.html#注意事项",
+          "content": "注意事项\n"
+        },
         {
           "title": "遇到的坑",
           "url": "/experience/index.html#遇到的坑",
@@ -130,7 +135,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "3. 小米 3",
           "url": "/experience/index.html#遇到的坑-3.-小米-3",
-          "content": "3. 小米 3型号\n系统版本\n"
+          "content": "3. 小米 3\n型号\n\n\n系统版本\n\n"
         },
         {
           "title": "4. Vivo",
