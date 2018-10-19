@@ -83,5 +83,15 @@ module.exports = {
         name: '登录: 登录其他账号',
         xpath:
             '//android.support.v7.widget.RecyclerView[@resource-id="com.tencent.mm:id/chl"]/android.widget.LinearLayout[1]'
+    },
+    WAIT_FINISHED: {
+        name: '等待启动完成',
+        xpath: '//android.view.View[@resource-id="com.tencent.mm:id/ic"]',
+        id: 'com.tencent.mm:id/ic'
+    },
+    PROGRESS_BAR: {
+        name: '加载框进度条',
+        xpath:
+            '//android.widget.ProgressBar[@resource-id="com.tencent.mm:id/a05"]'
     }
 };
