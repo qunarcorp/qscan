@@ -62,4 +62,4 @@ npm install qscan [-g]
 ```
 npm install qscan [--save-dev]
 ```
-作为项目依赖安装，可以通过模块方式引入，作为模块或中间件使用
+作为项目依赖安装，可以通过模块方式引入

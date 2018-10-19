@@ -45,7 +45,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "使用 NPM 安装 QScan",
           "url": "/documents/install.html#安装-qscan-使用-npm-安装-qscan",
-          "content": "使用 NPM 安装 QScan全局安装npm install qscan [-g]安装完成后即可通过命令行调用，执行 qscan -v 查看 QScan 版本项目中安装npm install qscan [--save-dev]作为项目依赖安装，可以通过模块方式引入，作为模块或中间件使用"
+          "content": "使用 NPM 安装 QScan全局安装npm install qscan [-g]安装完成后即可通过命令行调用，执行 qscan -v 查看 QScan 版本项目中安装npm install qscan [--save-dev]作为项目依赖安装，可以通过模块方式引入"
         }
       ]
     },
@@ -82,7 +82,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "自定义模式",
           "url": "/documents/course.html#自定义模式",
-          "content": "自定义模式QScan 提供了自定义模式"
+          "content": "自定义模式QScan 提供了自定义模式，用户可以参考 QScan 的微信扫码 Model 编写自己的模式 (Model)"
         }
       ]
     }
@@ -140,7 +140,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "搭建扫码服务器",
           "url": "/usage/scheme.html#搭建扫码服务器",
-          "content": "搭建扫码服务器搭建扫码服务，在 Node 服务中，以模块/中间件的形式引入 QScan。服务接收网络请求后，并通过 api 的方式调用手机扫码。"
+          "content": "搭建扫码服务器搭建扫码服务，在 Node 服务中，以模块的形式引入 QScan 使用。服务接收网络请求后，并通过 api 的方式调用手机扫码。"
         }
       ]
     }
