@@ -22,3 +22,11 @@ err => {
     }
 });
 
+<<<<<<< HEAD
+=======
+setTimeout(() => {
+    if(task.stop) {
+        task.stop()
+    };
+}, 5000);
+>>>>>>> 3ab78bd4bd2c3e31638e90a6fe493430f87a4a60

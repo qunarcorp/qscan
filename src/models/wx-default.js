@@ -5,9 +5,14 @@ const logger = require('../logger');
 const path = require('path');
 const fs = require('fs');
 
+<<<<<<< HEAD
 //
 const waitTimeout = 1 * 1000; // 操作最长时间
 const checkElTimeout = 1 * 1000; // 判断元素是否存在 注:可以根据手机运行速度进行调整
+=======
+const waitTimeout = 20 * 1000; // 操作最长时间
+const checkElTimeout = 3 * 1000; // 判断元素是否存在 注:可以根据手机运行速度进行调整
+>>>>>>> 3ab78bd4bd2c3e31638e90a6fe493430f87a4a60
 
 module.exports = {
     // Model Name 默认的微信的配置
@@ -92,9 +97,10 @@ module.exports = {
 
     // 检查状态是否正确，包括登录的用户是指定用户等
     checkStatus: (app, opts, cb) => {
-        logger.primary('检测登录状态');
+        logger.await('启动中...');
 
-        app.waitForElementByXPath('//android.widget.LinearLayout[1]')
+        app.waitForElementById(CONST.WAIT_FINISHED.id) // 使用ById适配View ViewGroup
+            .then(() => logger.primary('开始检测登录状态'))
             .setImplicitWaitTimeout(checkElTimeout)
             .elementByXPathIfExists(CONST.TAB_4.xpath, (err, el) => {
                 if (el) {
@@ -173,13 +179,15 @@ module.exports = {
         }
     }
 };
-
-const has = (app, xpath, cb) => {
+// 检测元素是否消失
+const hasDisappeared = (app, xpath, cb) => {
     app.setImplicitWaitTimeout(1000)
         .elementByXPathIfExists(xpath)
         .then(el => {
             if (el) {
-                has(app, xpath, cb);
+                setTimeout(() => {
+                    hasDisappeared(app, xpath, cb);
+                }, 1000);
             } else {
                 cb();
             }
@@ -209,18 +217,21 @@ const login = (app, opts, cb) => {
         .sendKeys(opts.pass)
         .elementByXPath(CONST.DO_LOGIN_BTN.xpath)
         .click()
-        // 重新设置等待时间
-        .setImplicitWaitTimeout(checkElTimeout)
-        .elementByXPathIfExists(CONST.ALERT_OK.xpath, (err, el) => {
-            // 通讯录弹窗是否存在, 存在则点击确定
-            if (el) {
-                el.click();
-            }
-        })
-        .setImplicitWaitTimeout(waitTimeout)
-        .waitForElementByXPath(CONST.TAB_1.xpath)
-        .then(() => cb(null, app))
-        .catch(err => cb(err));
+        .waitForElementByXPath(CONST.PROGRESS_BAR.xpath)
+        .then(() =>
+            hasDisappeared(app, CONST.PROGRESS_BAR.xpath, () =>
+                app
+                    .setImplicitWaitTimeout(checkElTimeout)
+                    .elementByXPathIfExists(CONST.ALERT_OK.xpath)
+                    .then(el => {
+                        if (el) el.click();
+                    })
+                    .setImplicitWaitTimeout(waitTimeout)
+                    .waitForElementByXPath(CONST.TAB_1.xpath)
+                    .then(() => cb(null, app))
+                    .catch(err => cb(err))
+            )
+        );
 };
 
 // 退出登录
