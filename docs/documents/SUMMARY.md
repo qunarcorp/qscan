@@ -10,5 +10,4 @@
   * [调用方式](course.md#调用方式)
     * [命令行调用](course.md#调用方式-命令行调用)
     * [作为 node 模块使用](course.md#调用方式-作为-node-模块使用)
-    * [作为 koa/express 的中间件使用](course.md#调用方式-作为-koaexpress-的中间件使用)
   * [自定义模式](course.md#自定义模式)

@@ -2,7 +2,7 @@ window.ydoc_plugin_search_json = {
   "文档": [
     {
       "title": "简介",
-      "content": "QScan 是一个高度可定制的扫码工具，基于 Appium，可灵活配置。QScan 提供了一个纯粹的自动扫码功能，它可以作为 Node 的一个模块使用、作为 koa/express 的一个中间件使用，因此使用起来非常灵活。",
+      "content": "QScan 是一个高度可定制的扫码工具，基于 Appium，可灵活配置。QScan 提供了一个纯粹的自动扫码功能，它可以直接使用命令行调用，也可以作为一个 Node 模块使用，，因此使用起来非常灵活。",
       "url": "/documents/index.html",
       "children": [
         {
@@ -45,13 +45,13 @@ window.ydoc_plugin_search_json = {
         {
           "title": "使用 NPM 安装 QScan",
           "url": "/documents/install.html#安装-qscan-使用-npm-安装-qscan",
-          "content": "使用 NPM 安装 QScan全局安装npm install qscan [-g]安装完成后即可通过命令行调用，执行 qscan -v 查看 QScan 版本项目中安装npm install qscan [--save-dev]作为项目依赖安装，可以通过模块方式引入，作为模块或中间件使用"
+          "content": "使用 NPM 安装 QScan全局安装npm install qscan [-g]安装完成后即可通过命令行调用，执行 qscan -v 查看 QScan 版本项目中安装npm install qscan [--save-dev]作为项目依赖安装，可以通过模块方式引入"
         }
       ]
     },
     {
       "title": "教程",
-      "content": "为了保证核心代码的纯粹，我们只提供最纯粹的自动扫码功能。QScan 可以作为一个 Node 模块使用，也可以作为一个 koa/express 中间件使用，因此使用起来非常灵活 ~",
+      "content": "为了保证核心代码的纯粹，我们只提供最纯粹的自动扫码功能。QScan 可以直接使用命令行调用，也可以作为一个 Node 模块使用，使用起来非常灵活 ~",
       "url": "/documents/course.html",
       "children": [
         {
@@ -80,14 +80,9 @@ window.ydoc_plugin_search_json = {
           "content": "作为 node 模块使用const QScan = require('qscan'); // 引入 qscan 工具\n// 实例化一个 scan 对象\nconst scan = new QScan({\n    // model 配置\n    modelOpts: {\n        'wx-default': { // model 名称\n            udid: 'HICMHMZTTW8DFI59', // 安卓设备 id，通过 adb service 命令查看\n            port: '4723', // 端口号\n            opts: {\n                user: 'xxx', // 微信用户名\n                pass: 'xxx' // 微信密码\n            }\n        }\n    }\n});\n我们实例化一个 QScan 对象，取名为 scan，这个对象有如下方法：scan.run({ modelName, type }, cb) 扫描二维码:scan.run(    {\n        modelName: 'wx-default', // model 名称\n        type: 'ide-login-scan' // 扫码类型\n    },\n    err => {\n        if (err) {\n            console.log(err); // 错误信息处理\n        }\n    }\n);\nscan.doctor(cb) 检查环境:scan.doctor(err => {    if (err) {\n        console.log(err);\n    }\n});\nscan.clone({ newModelName, oldModelName, opts }) 拷贝一份 Model，可以用 opts 对象覆盖一部分属性:scan.clone({    newModelName: 'another-model',\n    oldModelName: 'wx-default',\n    opts: {}\n});\nscan.loadModel({ model, udid, port, opts }) 自定义传入的 Model：const myModel = require('./myModel.js');scan.loadModel({\n    model: myModel,\n    udid: '3HX0217705004280',\n    port: '4723',\n    opts: {\n        user: 'xxx',\n        pass: 'xxx'\n    }\n});\n"
         },
         {
-          "title": "作为 koa/express 的中间件使用",
-          "url": "/documents/course.html#调用方式-作为-koaexpress-的中间件使用",
-          "content": "作为 koa/express 的中间件使用const Koa = require('Koa');const app = new Koa();\nconst QScan = require('qscan');\n\n// model 配置\nconst modelOpts = {\n    'wx-default': { // model 名称\n        udid: '3HX0217705004280',  // 安卓设备 id，通过 adb service 命令查看\n        port: '4723', // 端口号\n        opts: {\n            user: 'xxx', // 微信用户名\n            pass: 'xxx' // 微信密码\n        }\n    }\n}\n\n// 使用 QScan 的中间件，传入 model 名称与选项\napp.use(QScan.middleWare({\n    modelOpts // 传入 model 选项\n}));\n\napp.listen(9001, function () {\n    console.log(`Port[9001] started! `);\n});\n"
-        },
-        {
           "title": "自定义模式",
           "url": "/documents/course.html#自定义模式",
-          "content": "自定义模式QScan 提供了自定义模式"
+          "content": "自定义模式QScan 提供了自定义模式，用户可以参考 QScan 的微信扫码 Model 编写自己的模式 (Model)看完了教程后，你对 QScan 已经有了大致的了解，可以开始尝试使用了：方案"
         }
       ]
     }
@@ -107,7 +102,7 @@ window.ydoc_plugin_search_json = {
     },
     {
       "title": "快速起步",
-      "content": "确定你已经验证环境之后，这里是一个最简案例：使用 QScan 扫码登录微信开发者工具，使用命令行的方式调用扫码服务，请安装\b 微信开发者工具，",
+      "content": "确定你已经 验证环境 之后，这里是一个最简案例：使用 QScan 扫码登录微信开发者工具，使用命令行的方式调用扫码服务，请安装\b 微信开发者工具，",
       "url": "/usage/quickstart.html",
       "children": [
         {
@@ -128,7 +123,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "执行扫码服务",
           "url": "/usage/quickstart.html#执行扫码服务",
-          "content": "执行扫码服务执行下列代码，分别是指定的 Model 为 QScan 提供的微信扫码服务，type 类型为 ide-login-scan (微信开发者工具)qscan scan -m wx-default -t ide-login-scan可以看到手机上面自动登录并扫码成功，同时你可以在终端中看到对应的输出日志。一个最简单的扫码服务就跑起来了，除了使用命令行，你还可以使用 node 模块调用、或作为 koa/express 中间件调用，由于 QScan 的核心代码比较纯粹，因此你可以发挥想象力，将它应用在你的业务场景中。我们结合 Qunar 的实际应用场景，提供了一些使用方案，你可以在这里了解 QScan 的使用思路。"
+          "content": "执行扫码服务执行下列代码，分别是指定的 Model 为 QScan 提供的微信扫码服务，type 类型为 ide-login-scan (微信开发者工具)qscan scan -m wx-default -t ide-login-scan可以看到手机上面自动登录并扫码成功，同时你可以在终端中看到对应的输出日志。一个最简单的扫码服务就跑起来了，除了使用命令行，你还可以使用 node 模块调用 QScan，由于 QScan 的核心代码比较纯粹，因此你可以发挥想象力，将它应用在你的业务场景中。我们结合 Qunar 的实际应用场景，提供了一些使用方案，你可以在这里了解 QScan 的使用思路。"
         }
       ]
     },
@@ -145,31 +140,21 @@ window.ydoc_plugin_search_json = {
         {
           "title": "搭建扫码服务器",
           "url": "/usage/scheme.html#搭建扫码服务器",
-          "content": "搭建扫码服务器搭建扫码服务，在 Node 服务中，以模块/中间件的形式引入 QScan。服务接收网络请求后，并通过 api 的方式调用手机扫码。"
+          "content": "搭建扫码服务器搭建扫码服务，在 Node 服务中，以模块的形式引入 QScan 使用。服务接收网络请求后，并通过 api 的方式调用手机扫码。"
         }
       ]
     }
   ],
-  "前车之鉴": [
+  "常见问题": [
     {
-      "title": "前车之鉴",
-      "content": "由于市场上的安卓设备碎片化严重，Appium 调用设备的时候会遇到各种阻断，在这里我们推荐使用 红米 5 作为扫码设备。",
+      "title": "常见问题",
+      "content": "",
       "url": "/experience/index.html",
       "children": [
         {
-          "title": "使用技巧",
-          "url": "/experience/index.html#使用技巧",
-          "content": "使用技巧\n"
-        },
-        {
-          "title": "常见问题",
-          "url": "/experience/index.html#常见问题",
-          "content": "常见问题"
-        },
-        {
-          "title": "1. 华为 Mate 9",
-          "url": "/experience/index.html#常见问题-1.-华为-mate-9",
-          "content": "1. 华为 Mate 9型号： MHA-AL00\n系统版本: EMUI 5.0 (基于 Android 7.0)\n"
+          "title": "使用较新的安卓手机",
+          "url": "/experience/index.html#使用较新的安卓手机",
+          "content": "使用较新的安卓手机由于市场上的安卓设备碎片化严重，建议使用 Android 4.4版本以上的、性能较好的安卓手机，性能差的手机打开微信速度较慢，Appium 调用设备的时候可能经常遇到超时问题。"
         }
       ]
     }

@@ -2,7 +2,7 @@
 
 为了保证核心代码的纯粹，我们只提供最纯粹的自动扫码功能。
 
-QScan 可以作为一个 Node 模块使用，也可以作为一个 koa/express 中间件使用，因此使用起来非常灵活 ~
+QScan 可以直接使用命令行调用，也可以作为一个 Node 模块使用，使用起来非常灵活 ~
 
 ## 配置
 
@@ -145,35 +145,9 @@ scan.loadModel({
 });
 ```
 
-### 作为 koa/express 的中间件使用
-
-``` js
-const Koa = require('Koa');
-const app = new Koa();
-const QScan = require('qscan');
-
-// model 配置
-const modelOpts = {
-    'wx-default': { // model 名称
-        udid: '3HX0217705004280',  // 安卓设备 id，通过 adb service 命令查看
-        port: '4723', // 端口号
-        opts: {
-            user: 'xxx', // 微信用户名
-            pass: 'xxx' // 微信密码
-        }
-    }
-}
-
-// 使用 QScan 的中间件，传入 model 名称与选项
-app.use(QScan.middleWare({
-    modelOpts // 传入 model 选项
-}));
-
-app.listen(9001, function () {
-    console.log(`Port[9001] started! `);
-});
-```
-
 ## 自定义模式
 
-QScan 提供了自定义模式
+QScan 提供了自定义模式，用户可以参考 [QScan 的微信扫码 Model](https://github.com/qunarcorp) 编写自己的模式 (Model)
+
+---
+看完了教程后，你对 QScan 已经有了大致的了解，可以开始尝试使用了：[方案](../usage/index.html)
