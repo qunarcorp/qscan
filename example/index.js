@@ -26,4 +26,4 @@ setTimeout(() => {
     if(task.stop) {
         task.stop()
     };
-}, 12000);
+}, 5000);
