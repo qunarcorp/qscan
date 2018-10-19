@@ -7,6 +7,7 @@ const Queue = require('queue');
 const EventEmitter = require('events').EventEmitter;
 const shelljs = require('shelljs');
 const logger = require('../logger');
+const { handleError } = require('../util');
 
 // 本地 Host
 const LOCAL_HOST = '127.0.0.1';
@@ -279,10 +280,10 @@ class QScan extends EventEmitter {
                                         .quit()
                                         .then(() => cb())
                                         .catch(e => {
-                                            cb(e);
+                                            cb(handleError(e));
                                         });
                                 } else {
-                                    cb(err, app);
+                                    cb(handleError(err), app);
                                 }
                             },
                             quitCb

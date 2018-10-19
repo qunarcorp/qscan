@@ -5,8 +5,8 @@ const logger = require('../logger');
 const path = require('path');
 const fs = require('fs');
 
-const waitTimeout = 20 * 1000; // 操作最长时间
-const checkElTimeout = 3 * 1000; // 判断元素是否存在 注:可以根据手机运行速度进行调整
+const waitTimeout = 15 * 1000; // 定位元素 超时时间
+const checkElTimeout = 2 * 10; // 判断元素是否存在 注:可以根据手机运行速度进行调整
 
 module.exports = {
     // Model Name 默认的微信的配置
