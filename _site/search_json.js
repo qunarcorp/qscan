@@ -82,7 +82,7 @@ window.ydoc_plugin_search_json = {
         {
           "title": "自定义模式",
           "url": "/documents/course.html#自定义模式",
-          "content": "自定义模式QScan 提供了自定义模式，用户可以参考 QScan 的微信扫码 Model 编写自己的模式 (Model)"
+          "content": "自定义模式QScan 提供了自定义模式，用户可以参考 QScan 的微信扫码 Model 编写自己的模式 (Model)看完了教程后，你对 QScan 已经有了大致的了解，可以开始尝试使用了：方案"
         }
       ]
     }
@@ -102,7 +102,7 @@ window.ydoc_plugin_search_json = {
     },
     {
       "title": "快速起步",
-      "content": "确定你已经验证环境之后，这里是一个最简案例：使用 QScan 扫码登录微信开发者工具，使用命令行的方式调用扫码服务，请安装\b 微信开发者工具，",
+      "content": "确定你已经 验证环境 之后，这里是一个最简案例：使用 QScan 扫码登录微信开发者工具，使用命令行的方式调用扫码服务，请安装\b 微信开发者工具，",
       "url": "/usage/quickstart.html",
       "children": [
         {

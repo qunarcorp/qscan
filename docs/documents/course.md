@@ -148,3 +148,6 @@ scan.loadModel({
 ## 自定义模式
 
 QScan 提供了自定义模式，用户可以参考 [QScan 的微信扫码 Model](https://github.com/qunarcorp) 编写自己的模式 (Model)
+
+---
+看完了教程后，你对 QScan 已经有了大致的了解，可以开始尝试使用了：[方案](../usage/index.html)
