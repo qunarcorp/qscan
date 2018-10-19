@@ -28,8 +28,6 @@ class QScan extends EventEmitter {
         super();
         // Models
         this.models = {};
-        // webdrivers
-        this.wds = {};
         // 队列
         this.queues = {};
         // 读取配置 默认从 ~/.qscanrc 读取，也可以传进来
@@ -84,7 +82,7 @@ class QScan extends EventEmitter {
             devices = [],
             connectDevices = [];
         tasks.push(cb => {
-            // TODO Check Appium
+            // Check Appium
             if (!shelljs.which('appium')) {
                 cb('Not Found Appium');
             } else {
@@ -120,7 +118,7 @@ class QScan extends EventEmitter {
 
                 if (model.udid) {
                     tasks.push(cb => {
-                        // TODO Check Devices
+                        // Check Devices
                         // model.udid
                         if (!connectDevices.includes(model.udid)) {
                             cb(`Can Not Found device: ${model.udid}`);
@@ -141,7 +139,7 @@ class QScan extends EventEmitter {
                 }
                 if (model.port) {
                     tasks.push(cb => {
-                        // TODO Check Appium Process
+                        // Check Appium Process
                         if (!ports.includes(model.port)) {
                             cb(
                                 `There is no appium server at port: ${
@@ -178,6 +176,13 @@ class QScan extends EventEmitter {
             this.queues[modelName] = new Queue(QUEUE_OPTS);
         }
         let task = {};
+
+        if (this.queues[modelName].length) {
+            logger.warn(
+                `新任务开始排队, 任务数: ${this.queues[modelName].length}`
+            );
+        }
+
         this.queues[modelName].push(callback => {
             this.__handleDevice(
                 { modelName, type },
@@ -242,21 +247,13 @@ class QScan extends EventEmitter {
         });
     }
     __initConnect(model) {
-        let ret = null;
-
-        if (this.wds[model.port]) {
-            ret = this.wds[model.port];
-        } else {
-            this.wds[model.port] = ret = wd
-                .promiseChainRemote({
-                    host: LOCAL_HOST,
-                    port: model.port
-                })
-                .init(model.connectOpt)
-                .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
-        }
-
-        return ret;
+        return wd
+            .promiseChainRemote({
+                host: LOCAL_HOST,
+                port: model.port
+            })
+            .init(model.connectOpt)
+            .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
     }
     __checkStatus(model, cb, quitCb) {
         const app = this.__initConnect(model);
