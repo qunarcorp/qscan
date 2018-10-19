@@ -6,8 +6,8 @@ const q =  new QScan({
             udid: '7PTS4TDAGM9DLNEU',
             port: '4723',
             opts: {
-                user: '****',
-                pass: '*****'
+                user: 'xxxx',
+                pass: 'xxxx'
             }
         }
     }
