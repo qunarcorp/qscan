@@ -145,26 +145,16 @@ window.ydoc_plugin_search_json = {
       ]
     }
   ],
-  "前车之鉴": [
+  "常见问题": [
     {
-      "title": "前车之鉴",
-      "content": "由于市场上的安卓设备碎片化严重，Appium 调用设备的时候会遇到各种阻断，在这里我们推荐使用 红米 5 作为扫码设备。",
+      "title": "常见问题",
+      "content": "",
       "url": "/experience/index.html",
       "children": [
         {
-          "title": "使用技巧",
-          "url": "/experience/index.html#使用技巧",
-          "content": "使用技巧\n"
-        },
-        {
-          "title": "常见问题",
-          "url": "/experience/index.html#常见问题",
-          "content": "常见问题"
-        },
-        {
-          "title": "1. 华为 Mate 9",
-          "url": "/experience/index.html#常见问题-1.-华为-mate-9",
-          "content": "1. 华为 Mate 9型号： MHA-AL00\n系统版本: EMUI 5.0 (基于 Android 7.0)\n"
+          "title": "使用较新的安卓手机",
+          "url": "/experience/index.html#使用较新的安卓手机",
+          "content": "使用较新的安卓手机由于市场上的安卓设备碎片化严重，建议使用 Android 4.4版本以上的、性能较好的安卓手机，性能差的手机打开微信速度较慢，Appium 调用设备的时候可能经常遇到超时问题。"
         }
       ]
     }
