@@ -240,11 +240,21 @@ class QScan extends EventEmitter {
 
         const script = `tell application "Terminal"
                             activate
-                            do script ("${APPIUM_CLI} -p ${port} -U ${udid}")
+                            set theTab to do script ("${APPIUM_CLI} -p ${port} -U ${udid}")
+                            set theText to ""
+
+                            repeat while theText = ""
+                                tell front window to set theText2 to contents of selected tab as text
+                                if (theText2 contains "Welcome to Appium") then
+                                    set theText to theText2
+                                end if
+                            end repeat
+
+                            delay 1
                         end tell`;
 
         applescript.execString(script, function(err) {
-            setTimeout(() => cb(err), 4000);
+            cb(err);
         });
     }
     __initConnect(model) {
