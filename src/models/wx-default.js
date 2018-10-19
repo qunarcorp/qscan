@@ -6,8 +6,8 @@ const path = require('path');
 const fs = require('fs');
 
 //
-const waitTimeout = 30 * 1000; // 操作最长时间
-const checkElTimeout = 8 * 1000; // 判断元素是否存在 注:可以根据手机运行速度进行调整
+const waitTimeout = 1 * 1000; // 操作最长时间
+const checkElTimeout = 1 * 1000; // 判断元素是否存在 注:可以根据手机运行速度进行调整
 
 module.exports = {
     // Model Name 默认的微信的配置

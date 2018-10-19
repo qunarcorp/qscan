@@ -1,5 +1,6 @@
 const QScan = require('../core/qcan');
 const Logger = require('../logger');
+const Util = require('../util');
 
 module.exports = {
     usage: '[options]',
@@ -23,8 +24,10 @@ module.exports = {
                 type: options.type 
             }, (err) => {
                 if (err) {
-                    console.log(err);
-                    Logger.error('执行失败！', err.message);
+                    Util.handleResponse(err, function(msg) {
+                        Logger.warn(err.msg);
+                        Logger.error(msg);
+                    });
                 } else {
                     Logger.success('执行成功！');
                 }
