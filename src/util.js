@@ -14,7 +14,7 @@ getXpathMap = function() {
 
 findBtnName = function(message) {
     const regex = /(\(.+?)\)/g;
-    const xpath = message.replace('/\\/gm', '').match(regex)[0].split('').slice(2, -2).join('') || '';
+    const xpath = message.replace(/\\/g, '').match(regex)[0].split('').slice(2, -2).join('') || '';
     const xpathMap = getXpathMap();
     return xpathMap[xpath] || '';
 };
