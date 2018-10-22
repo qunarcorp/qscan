@@ -5,8 +5,13 @@ const logger = require('../logger');
 const path = require('path');
 const fs = require('fs');
 
-const waitTimeout = 15 * 1000; // 定位元素 超时时间
-const checkElTimeout = 2 * 10; // 判断元素是否存在 注:可以根据手机运行速度进行调整
+// 定位元素超时时间
+const waitTimeout = 15 * 1000;
+// 判断元素是否存在超时时间
+const checkElTimeout = 3 * 1000;
+// 微信apk下载地址
+const wxInstallUrl =
+    'http://yapkwww.cdn.anzhi.com/data4/apk/201808/20/21134e06c366c63faace92226d3124bb_29305400.apk';
 
 module.exports = {
     // Model Name 默认的微信的配置
@@ -25,9 +30,6 @@ module.exports = {
     },
     // 等待超时时间
     waitTimeout,
-    // 检测元素时间
-    checkElTimeout,
-
     // 检查 App 是否是相应的版本等
     checkApp: (cb, udid) => {
         const version = pkgJSON.support_wx_version;
@@ -39,21 +41,19 @@ module.exports = {
                 }
             )
             .stdout.trim();
-        // TODO
+
         currentVersion =
             currentVersion && currentVersion.match(/\w=([0-9.]+)/)[1];
 
         if (!currentVersion || currentVersion !== version) {
             logger.warn(`Need version-${version} wechat app`);
             logger.info(`installing ${version} wechat...`);
-            // install wx 6.7.2
-            const apksPath = path.join(__dirname, '../apks'),
-                apkLinePath =
-                    'http://yapkwww.cdn.anzhi.com/data4/apk/201808/20/21134e06c366c63faace92226d3124bb_29305400.apk';
+            // install wx
+            const apksPath = path.join(__dirname, '../apks');
 
-            if (!fs.existsSync(`${apksPath}/wx672.apk`)) {
+            if (!fs.existsSync(`${apksPath}/wx.apk`)) {
                 shelljs.exec(`mkdir ${apksPath}`);
-                shelljs.exec(`curl -o ${apksPath}/wx672.apk  ${apkLinePath}`);
+                shelljs.exec(`curl -o ${apksPath}/wx.apk  ${wxInstallUrl}`);
             }
 
             if (currentVersion > version) {
@@ -71,12 +71,9 @@ module.exports = {
             }
 
             if (
-                shelljs.exec(
-                    `adb -s ${udid} install -r ${apksPath}/wx672.apk`,
-                    {
-                        silent: true
-                    }
-                ).code === 0
+                shelljs.exec(`adb -s ${udid} install -r ${apksPath}/wx.apk`, {
+                    silent: true
+                }).code === 0
             ) {
                 logger.success(`install wechat-${version} success`);
                 cb(null);
