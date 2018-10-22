@@ -6,8 +6,8 @@
     "bin": {
         "qscan": "./bin/qscan"
     },
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+    "engines": {
+        "node": ">= 8.0.0"
     },
     "author": "",
     "license": "Apache 2.0",
