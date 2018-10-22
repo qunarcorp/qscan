@@ -4,7 +4,7 @@ banner:
   desc: '基于 Appium 的扫码方案，可灵活配置'
   btns: 
     - { name: '开 始', href: './documents/index.html', primary: true }
-    - { name: 'Github >', href: 'https://github.com/qunarcorp' }
+    - { name: 'Github >', href: 'https://github.com/qunarcorp/qscan' }
   caption: '当前版本: v0.1.0'
 features: 
   - { name: '纯粹', desc: '为了保证核心代码的纯粹，我们只提供最纯粹的自动扫码功能' }
