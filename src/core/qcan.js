@@ -209,6 +209,22 @@ class QScan extends EventEmitter {
             { opts }
         );
     }
+    exit() {
+        logger.info('已断开与手机连接');
+
+        for (const modelName in this.models) {
+            if (this.models.hasOwnProperty(modelName)) {
+                const model = this.models[modelName];
+
+                shelljs.exec(
+                    `ps -A | grep -p ${model.port} | cut -c 1-5 | xargs kill`,
+                    {
+                        silent: true
+                    }
+                );
+            }
+        }
+    }
     __loadModelFile({ modelFilePath, modelOpts }) {
         const model = require(modelFilePath);
         const opts = modelOpts[model.name || 'default'] || {};
@@ -220,7 +236,7 @@ class QScan extends EventEmitter {
     __connectAppium(model, cb) {
         const { port, udid } = model;
 
-        const process = shelljs
+        const pids = shelljs
             .exec(`ps -A | awk '/appium/{print $1 " " $4 " " $7 " " $9}'`, {
                 silent: true
             })
@@ -230,7 +246,7 @@ class QScan extends EventEmitter {
                 return l[1] === 'node' && +l[2] === +port && l[3] === udid;
             });
 
-        if (process.length) return cb();
+        if (pids.length) return cb();
 
         const APPIUM_CLI = shelljs
             .exec('which appium', {
@@ -253,9 +269,7 @@ class QScan extends EventEmitter {
                             delay 1
                         end tell`;
 
-        applescript.execString(script, function(err) {
-            cb(err);
-        });
+        applescript.execString(script, err => cb(err));
     }
     __initConnect(model) {
         return wd
