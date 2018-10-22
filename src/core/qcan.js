@@ -12,7 +12,7 @@ const { handleError } = require('../util');
 // 本地 Host
 const LOCAL_HOST = '127.0.0.1';
 // 默认的等待时间
-const WAIT_TIMEOUT = 3000;
+const WAIT_TIMEOUT = 15 * 1000;
 // 队列配置
 const QUEUE_OPTS = {
     concurrency: 1, // 并发任务数1，等于串行
