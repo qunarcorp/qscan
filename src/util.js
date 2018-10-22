@@ -12,7 +12,6 @@ getXpathMap = function() {
     return xpathMap;
 };
 
-//  忽略根据id 查找元素
 findBtnName = function(message) {
     const regex = /(\(.+?)\)/g;
     const xpath = message.replace('\\', '').match(regex)[0].split('').slice(2, -2).join('').replace('\\', '') || '';
@@ -33,6 +32,10 @@ module.exports = {
             name = findBtnName(res.message);
             return new Error(`定位元素: ${name} 超时`);
         default:
+            if(!res.status && res.message.indexOf(`Element condition wasn't satisfied!`) !== -1) {
+                name = findBtnName(res.message || res);
+                return new Error(`元素: ${name} 条件不满足或者找不到`);
+            }
             return res;
         }
     }
