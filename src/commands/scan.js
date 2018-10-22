@@ -16,10 +16,12 @@ module.exports = {
                 `使用的扫码模式 <Model> 和使用的扫码类型 <Type> 参数，必须传入。`
             );
         } else {
-            new QScan({
+            const Q = new QScan({
                 customModel: options.customModel || null,
                 modelOpts: options.runConfig || null
-            }).run(
+            });
+
+            Q.run(
                 {
                     modelName: options.model,
                     type: options.type
@@ -30,6 +32,8 @@ module.exports = {
                     } else {
                         Logger.success('执行成功！');
                     }
+
+                    Q.exit();
                 }
             );
         }
