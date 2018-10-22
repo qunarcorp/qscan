@@ -108,7 +108,12 @@ window.ydoc_plugin_search_json = {
         {
           "title": "填写配置",
           "url": "/usage/quickstart.html#填写配置",
-          "content": "填写配置编辑 ~/.qscanrc 文件，填写配置vi ~/.qscanrc{    \"wx-default\": { // key 值为 Modal 名称\n        \"udid\": \"HICMHMZTTW8DFI59\", // 安卓设备 id，通过 adb service 命令查看\n        \"port\": \"4723\", // 端口号，这里设置为 4723\n        \"opts\": {\n            \"user\": \"xxx\", // 微信用户名\n            \"pass\": \"xxx\" // 微信密码\n        },\n        \"checkApp\": true // 校验是否安装微信 APP 及其版本 \n    }\n}\n"
+          "content": "填写配置编辑 ~/.qscanrc 文件，填写配置vi ~/.qscanrc{    \"wx-default\": { // key 值为 Modal 名称\n        \"udid\": \"HICMHMZTTW8DFI59\", // 安卓设备 id，通过 adb service 命令查看\n        \"port\": \"4723\", // 端口号，例如这里设置为 4723\n        \"opts\": {\n            \"user\": \"xxx\", // 微信用户名\n            \"pass\": \"xxx\" // 微信密码\n        },\n        \"checkApp\": true // 校验是否安装微信 APP 及其版本 \n    }\n}\n"
+        },
+        {
+          "title": "启动 Appium 服务",
+          "url": "/usage/quickstart.html#启动-appium-服务",
+          "content": "启动 Appium 服务按照刚刚 .qscanrc 文件中配置的端口号和设备 id 启动 Appium 服务appium -p 4723 -U HICMHMZTTW8DFI59"
         },
         {
           "title": "检查运行环境",
@@ -152,9 +157,9 @@ window.ydoc_plugin_search_json = {
       "url": "/experience/index.html",
       "children": [
         {
-          "title": "使用较新的安卓手机",
-          "url": "/experience/index.html#使用较新的安卓手机",
-          "content": "使用较新的安卓手机由于市场上的安卓设备碎片化严重，建议使用 Android 4.4版本以上的、性能较好的安卓手机，性能差的手机打开微信速度较慢，Appium 调用设备的时候可能经常遇到超时问题。"
+          "title": "超时问题",
+          "url": "/experience/index.html#超时问题",
+          "content": "超时问题请使用使用较新的安卓手机：由于市场上的安卓设备碎片化严重，建议使用 Android 4.4版本以上的、性能较好的安卓手机，性能差的手机打开微信速度较慢，Appium 调用设备的时候可能经常遇到超时问题。如果你在使用中遇到问题，请在 github 上面提出 Issue"
         }
       ]
     }

@@ -11,7 +11,7 @@
 <pre><code class="language-json"><span class="token punctuation">{</span>
     <span class="token property">"wx-default"</span><span class="token operator">:</span> <span class="token punctuation">{</span> // key 值为 Modal 名称
         <span class="token property">"udid"</span><span class="token operator">:</span> <span class="token string">"HICMHMZTTW8DFI59"</span><span class="token punctuation">,</span> // 安卓设备 id，通过 adb service 命令查看
-        <span class="token property">"port"</span><span class="token operator">:</span> <span class="token string">"4723"</span><span class="token punctuation">,</span> // 端口号，这里设置为 <span class="token number">4723</span>
+        <span class="token property">"port"</span><span class="token operator">:</span> <span class="token string">"4723"</span><span class="token punctuation">,</span> // 端口号，例如这里设置为 <span class="token number">4723</span>
         <span class="token property">"opts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
             <span class="token property">"user"</span><span class="token operator">:</span> <span class="token string">"xxx"</span><span class="token punctuation">,</span> // 微信用户名
             <span class="token property">"pass"</span><span class="token operator">:</span> <span class="token string">"xxx"</span> // 微信密码
@@ -19,6 +19,10 @@
         <span class="token property">"checkApp"</span><span class="token operator">:</span> <span class="token boolean">true</span> // 校验是否安装微信 APP 及其版本 
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
+</code></pre>
+<h3 id="启动-appium-服务">启动 Appium 服务</h3>
+<p>按照刚刚 .qscanrc 文件中配置的端口号和设备 id 启动 Appium 服务</p>
+<pre><code>appium -p 4723 -U HICMHMZTTW8DFI59
 </code></pre>
 <h3 id="检查运行环境">检查运行环境</h3>
 <p>全局安装 QScan 后，执行 <code>qscan doctor</code> 检测上面的配置，确保所有的输出都是 <code>✔ SUCCESS</code></p>

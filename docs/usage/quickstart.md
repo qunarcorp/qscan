@@ -11,7 +11,7 @@ vi ~/.qscanrc
 {
     "wx-default": { // key 值为 Modal 名称
         "udid": "HICMHMZTTW8DFI59", // 安卓设备 id，通过 adb service 命令查看
-        "port": "4723", // 端口号，这里设置为 4723
+        "port": "4723", // 端口号，例如这里设置为 4723
         "opts": {
             "user": "xxx", // 微信用户名
             "pass": "xxx" // 微信密码
@@ -19,6 +19,12 @@ vi ~/.qscanrc
         "checkApp": true // 校验是否安装微信 APP 及其版本 
     }
 }
+```
+
+### 启动 Appium 服务
+按照刚刚 .qscanrc 文件中配置的端口号和设备 id 启动 Appium 服务
+```
+appium -p 4723 -U HICMHMZTTW8DFI59
 ```
 
 ### 检查运行环境
