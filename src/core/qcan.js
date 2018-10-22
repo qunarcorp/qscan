@@ -293,7 +293,7 @@ class QScan extends EventEmitter {
                                             cb(handleError(e));
                                         });
                                 } else {
-                                    cb(handleError(err), app);
+                                    cb(handleError(err));
                                 }
                             },
                             quitCb
