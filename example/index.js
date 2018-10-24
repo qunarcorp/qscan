@@ -1,14 +1,14 @@
 const QScan = require('../src/index');
 const Util = require('../src/util');
 
-const q =  new QScan({
+const q = new QScan({
     modelOpts: {
         'wx-default': {
-            udid: '3HX0217705004280',
+            udid: '42122088',
             port: '4723',
             opts: {
-                user: '······',
-                pass: '·····'
+                user: '***',
+                pass: '***'
             }
         }
     }
@@ -18,11 +18,33 @@ const task = q.run({
     type: 'ide-login-scan'
 },
 err => {
-    console.log('run err', err);
+    console.log(err);
 });
 
+// let tast2 = null;
+// setTimeout(() => {
+//     tast2 = q.run({
+//         modelName: 'wx-default',
+//         type: 'ide-login-scan'
+//     },
+//     err => {
+//         console.log('run err', err);
+//     });
+// }, 2000);
+
+// setTimeout(() => {
+//     task.stop();
+// }, 100);
+
+// tast2 = q.run({
+//     modelName: 'wx-default',
+//     type: 'ide-login-scan'
+// },
+// err => {
+//     console.log('第二个任务结束');
+// });
+
 setTimeout(() => {
-    if(task.stop) {
-        task.stop()
-    };
+    task.stop();
+
 }, 5000);

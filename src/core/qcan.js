@@ -7,7 +7,11 @@ const Queue = require('queue');
 const EventEmitter = require('events').EventEmitter;
 const shelljs = require('shelljs');
 const logger = require('../logger');
-const { handleError } = require('../util');
+const {
+    handleError,
+    addListener,
+    dispatch
+} = require('../util');
 
 // 本地 Host
 const LOCAL_HOST = '127.0.0.1';
@@ -25,7 +29,10 @@ const DEFAULT_MODEL_PATH = path.join(__dirname, '../models');
 const DEFAULT_MODEL_OPTS_PATH = path.join(process.env['HOME'], '.qscanrc');
 
 class QScan extends EventEmitter {
-    constructor({ customModel, modelOpts }) {
+    constructor({
+        customModel,
+        modelOpts
+    }) {
         super();
         // Models
         this.models = {};
@@ -93,7 +100,9 @@ class QScan extends EventEmitter {
 
         if (this.models) {
             let appServers = shelljs
-                .exec('ps | grep "appium"', { silent: true })
+                .exec('ps | grep "appium"', {
+                    silent: true
+                })
                 .stdout.trim()
                 .split('\n');
             appServers.forEach(item => {
@@ -104,7 +113,9 @@ class QScan extends EventEmitter {
             });
 
             connectDevices = shelljs
-                .exec('adb devices', { silent: true })
+                .exec('adb devices', {
+                    silent: true
+                })
                 .stdout.trim()
                 .split('\n')
                 .map(item => {
@@ -160,7 +171,12 @@ class QScan extends EventEmitter {
         });
         async.series(tasks, cb);
     }
-    loadModel({ model, udid, port, opts }) {
+    loadModel({
+        model,
+        udid,
+        port,
+        opts
+    }) {
         if (udid) {
             model.udid = model.connectOpt.udid = udid;
         }
@@ -172,7 +188,10 @@ class QScan extends EventEmitter {
         }
         this.models[model.name] = model;
     }
-    run({ modelName, type }, cb) {
+    run({
+        modelName,
+        type
+    }, cb) {
         if (!this.queues[modelName]) {
             this.queues[modelName] = new Queue(QUEUE_OPTS);
         }
@@ -184,29 +203,42 @@ class QScan extends EventEmitter {
             );
         }
 
-        this.queues[modelName].push(callback => {
-            this.__handleDevice(
-                { modelName, type },
-                err => {
-                    cb(err);
-                    callback();
-                },
-                app => {
-                    if (app) {
-                        task.stop = () => {
-                            app.quit();
-                        };
-                    }
-                }
+        const handle = (callback) => {
+            this.__handleDevice({
+                modelName,
+                type
+            }, task,
+            err => {
+                cb(err);
+                callback();
+            }
             );
-        });
+        };
+        task.handle = handle;
+        this.queues[modelName].push(handle);
+        task.stop = () => {
+            const index = this.queues[modelName].indexOf(task.handle);
+            if (index === -1) { // 正在执行
+                if (task.app) {
+                    task.app.quit();
+                }
+                this.__killByPort(task.model.port);
+                cb();
+            } else {
+                this.queues[modelName].splice(index, 1);
+            }
+        }
         return task;
     }
-    clone({ newModelName, oldModelName, opts }) {
-        this.models[newModelName] = Object.assign(
-            {},
-            this.models[oldModelName] || {},
-            { opts }
+    clone({
+        newModelName,
+        oldModelName,
+        opts
+    }) {
+        this.models[newModelName] = Object.assign({},
+            this.models[oldModelName] || {}, {
+                opts
+            }
         );
     }
     exit() {
@@ -215,17 +247,21 @@ class QScan extends EventEmitter {
         for (const modelName in this.models) {
             if (this.models.hasOwnProperty(modelName)) {
                 const model = this.models[modelName];
-
-                shelljs.exec(
-                    `ps -A | grep -p ${model.port} | cut -c 1-5 | xargs kill`,
-                    {
-                        silent: true
-                    }
-                );
+                this.__killByPort(model.port);
             }
         }
     }
-    __loadModelFile({ modelFilePath, modelOpts }) {
+    __killByPort(port) {
+        shelljs.exec(
+            `ps -A | grep -p ${port} | cut -c 1-5 | xargs kill`, {
+                silent: true
+            }
+        );
+    }
+    __loadModelFile({
+        modelFilePath,
+        modelOpts
+    }) {
         const model = require(modelFilePath);
         const opts = modelOpts[model.name || 'default'] || {};
         this.loadModel({
@@ -233,8 +269,16 @@ class QScan extends EventEmitter {
             ...opts
         });
     }
-    __connectAppium(model, cb) {
-        const { port, udid } = model;
+    __connectAppium(model, task, cb) {
+        addListener('cancelAppium', () => {
+            this.cancel = true;
+            cb('', true);
+        });
+
+        const {
+            port,
+            udid
+        } = model;
 
         const pids = shelljs
             .exec(`ps -A | awk '/appium/{print $1 " " $4 " " $7 " " $9}'`, {
@@ -268,8 +312,9 @@ class QScan extends EventEmitter {
 
                             delay 1
                         end tell`;
-
-        applescript.execString(script, err => cb(err));
+        applescript.execString(script, err => {
+            cb(err);
+        });
     }
     __initConnect(model) {
         return wd
@@ -280,23 +325,29 @@ class QScan extends EventEmitter {
             .init(model.connectOpt)
             .setImplicitWaitTimeout(model.waitTimeout || WAIT_TIMEOUT);
     }
-    __checkStatus(model, cb, quitCb) {
+    __checkStatus(model, task, cb) {
         const app = this.__initConnect(model);
-        quitCb(app);
+        task.app = app;
         model.checkStatus(app, model.opts, cb);
     }
-    __handleDevice({ modelName, type }, cb, quitCb) {
+    __handleDevice({
+        modelName,
+        type
+    }, task, cb) {
         const model = this.models[modelName];
 
         if (model) {
+            task.model = model;
             if (model.types && model.types[type]) {
-                this.__connectAppium(model, err => {
+                this.__connectAppium(model, task, (err, stop) => {
                     if (err) {
                         cb(err);
+                    } else if (stop) {
+                        cb();
                     } else {
                         // 检测登录状态并登录
                         this.__checkStatus(
-                            model,
+                            model, task,
                             (err, app) => {
                                 if (!err) {
                                     // 登录成功 可以直接扫码
@@ -309,8 +360,7 @@ class QScan extends EventEmitter {
                                 } else {
                                     cb(handleError(err));
                                 }
-                            },
-                            quitCb
+                            }
                         );
                     }
                 });

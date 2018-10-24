@@ -19,6 +19,13 @@ findBtnName = function(message) {
     return xpathMap[xpath] || '';
 };
 
+var subscribers = [];
+
+function Event(eventName, callback) {
+    this.eventName = eventName;
+    this.callback = callback;
+}
+
 module.exports = {
     handleError: function(res) {
         let name = '';
@@ -38,5 +45,17 @@ module.exports = {
             }
             return res;
         }
+    },
+    addListener: function(eventName, callback) {
+        var event = new Event(eventName, callback);
+        subscribers.push(event);
+        return event;
+    },
+    dispatch: function(eventName, param) {
+        subscribers.forEach(function(event) {
+            if (event.eventName === eventName) {
+                event.callback && event.callback(param);
+            }
+        });
     }
 }

@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 
 // 定位元素超时时间
-const waitTimeout = 15 * 1000;
+const waitTimeout = 5 * 1000;
 // 判断元素是否存在超时时间
 const checkElTimeout = 3 * 1000;
 // 微信apk下载地址
