@@ -222,7 +222,16 @@ class QScan extends EventEmitter {
                 if (task.app) {
                     task.app.quit();
                 }
-                this.__killByPort(task.model.port);
+                if(shelljs.exec(`ps -A | grep -p ${task.model.port} | cut -c 1-5 | xargs kill`, {
+                    silent: true
+                }).stdout.trim().split('\n').length > 2) {
+                    this.__killByPort(task.model.port);
+                } else {    // appium启动中但是检测不到
+                    addListener('appiumQuit', app => {
+                        app.quit();
+                        this.__killByPort(task.model.port);
+                    });
+                }
                 cb();
             } else {
                 this.queues[modelName].splice(index, 1);
@@ -270,10 +279,6 @@ class QScan extends EventEmitter {
         });
     }
     __connectAppium(model, task, cb) {
-        addListener('cancelAppium', () => {
-            this.cancel = true;
-            cb('', true);
-        });
 
         const {
             port,
@@ -328,6 +333,7 @@ class QScan extends EventEmitter {
     __checkStatus(model, task, cb) {
         const app = this.__initConnect(model);
         task.app = app;
+        dispatch('appiumQuit', app);
         model.checkStatus(app, model.opts, cb);
     }
     __handleDevice({
