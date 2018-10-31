@@ -55,7 +55,7 @@ module.exports = {
     },
     MP_AFTER_SCAN: {
         name: 'mp扫码后确认',
-        xpath: '//android.view.View[@resource-id="js_allow"]'
+        xpath: '//android.view.View[@content-desc="确定 " or @text="确定 "]'
     },
     LAST_WX_USERNAME: {
         name: '上一次登录的微信号',
