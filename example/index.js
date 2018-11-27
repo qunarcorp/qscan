@@ -13,38 +13,10 @@ const q = new QScan({
         }
     }
 });
-const task = q.run({
+
+q.run({
     modelName: 'wx-default',
     type: 'ide-login-scan'
-},
-err => {
+}, err => {
     console.log(err);
 });
-
-// let tast2 = null;
-// setTimeout(() => {
-//     tast2 = q.run({
-//         modelName: 'wx-default',
-//         type: 'ide-login-scan'
-//     },
-//     err => {
-//         console.log('run err', err);
-//     });
-// }, 2000);
-
-// setTimeout(() => {
-//     task.stop();
-// }, 100);
-
-// tast2 = q.run({
-//     modelName: 'wx-default',
-//     type: 'ide-login-scan'
-// },
-// err => {
-//     console.log('第二个任务结束');
-// });
-
-setTimeout(() => {
-    task.stop();
-
-}, 4000);
