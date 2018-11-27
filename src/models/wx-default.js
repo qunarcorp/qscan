@@ -8,7 +8,7 @@ const fs = require('fs');
 // 定位元素超时时间
 const waitTimeout = 15 * 1000;
 // 判断元素是否存在超时时间
-const checkElTimeout = 3 * 1000;
+const checkElTimeout = 5 * 1000;
 // 微信apk下载地址
 const wxInstallUrl =
     'http://yapkwww.cdn.anzhi.com/data4/apk/201808/20/21134e06c366c63faace92226d3124bb_29305400.apk';
