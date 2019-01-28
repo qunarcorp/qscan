@@ -90,9 +90,14 @@ module.exports = {
     checkStatus: (app, opts, cb) => {
         logger.await('启动中...');
 
-        app.waitForElementById(CONST.WAIT_FINISHED.id) // 使用ById适配View ViewGroup
+        // 先检测是否有弹窗遮挡 (在其他设备登录的时候会有弹窗提示)
+        app.setImplicitWaitTimeout(checkElTimeout)
+            .elementByXPathIfExists(CONST.ALERT_OK.xpath)
+            .then(el => {
+                if (el) el.click();
+            })
+            .waitForElementById(CONST.WAIT_FINISHED.id) // 使用ById适配View ViewGroup
             .then(() => logger.primary('开始检测登录状态'))
-            .setImplicitWaitTimeout(checkElTimeout)
             .elementByXPathIfExists(CONST.TAB_4.xpath, (err, el) => {
                 if (el) {
                     logger.info('已登录! 检测账号是否一致');
