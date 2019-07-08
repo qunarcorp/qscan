@@ -172,6 +172,19 @@ module.exports = {
                 .click()
                 .waitForElementByXPath(CONST.MP_AFTER_SCAN.xpath)
                 .click();
+        },
+        // 微信后台登录
+        'backstage-publish-scan': (app, opts, cb) => {
+            logger.info('扫码类型: 微信后台');
+
+            return app
+                .setImplicitWaitTimeout(waitTimeout)
+                .waitForElementByXPath(CONST.THE_MORE_BTN.xpath)
+                .click()
+                .elementByXPath(CONST.THE_SCAN_BTN.xpath)
+                .click()
+                .waitForElementByXPath(CONST.PUBLISH.xpath)
+                .click();
         }
     }
 };

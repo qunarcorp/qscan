@@ -51,5 +51,5 @@
             "helpMessage": "Commit message 格式错误, \n请查看规范: https://github.com/conventional-changelog-archived-repos/validate-commit-msg"
         }
     },
-    "support_wx_version": "6.7.2"
+    "support_wx_version": "7.0.5"
 }
