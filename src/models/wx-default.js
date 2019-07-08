@@ -153,6 +153,8 @@ module.exports = {
 
             return app
                 .setImplicitWaitTimeout(waitTimeout)
+                .waitForElementByXPath(CONST.TAB_1.xpath)
+                .click()
                 .waitForElementByXPath(CONST.THE_MORE_BTN.xpath)
                 .click()
                 .elementByXPath(CONST.THE_SCAN_BTN.xpath)
@@ -166,6 +168,8 @@ module.exports = {
 
             return app
                 .setImplicitWaitTimeout(waitTimeout)
+                .waitForElementByXPath(CONST.TAB_1.xpath)
+                .click()
                 .waitForElementByXPath(CONST.THE_MORE_BTN.xpath)
                 .click()
                 .elementByXPath(CONST.THE_SCAN_BTN.xpath)
@@ -179,6 +183,8 @@ module.exports = {
 
             return app
                 .setImplicitWaitTimeout(waitTimeout)
+                .waitForElementByXPath(CONST.TAB_1.xpath)
+                .click()
                 .waitForElementByXPath(CONST.THE_MORE_BTN.xpath)
                 .click()
                 .elementByXPath(CONST.THE_SCAN_BTN.xpath)
