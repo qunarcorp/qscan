@@ -68,7 +68,7 @@ module.exports = {
     SETTING_EXIT: {
         name: '设置: 退出登录弹窗',
         xpath:
-            '//android.support.v7.widget.RecyclerView[@resource-id="com.tencent.mm:id/lp"]/android.widget.LinearLayout[1]',
+            '//android.support.v7.widget.RecyclerView[@resource-id="com.tencent.mm:id/dcp"]/android.widget.LinearLayout[1]',
     },
     LOGIN_MORE: {
         name: '登录: 更多',
@@ -77,12 +77,12 @@ module.exports = {
     LOGIN_OTHER: {
         name: '登录: 登录其他账号',
         xpath:
-            '//android.support.v7.widget.RecyclerView[@resource-id="com.tencent.mm:id/lp"]/android.widget.LinearLayout[1]',
+            '//android.support.v7.widget.RecyclerView[@resource-id="com.tencent.mm:id/dcp"]/android.widget.LinearLayout[1]',
     },
     WAIT_FINISHED: {
         name: '等待启动完成(待登录的背景)',
         xpath: '//android.view.View[@resource-id="com.tencent.mm:id/ke"]',
-        id: 'com.tencent.mm:id/ic',
+        id: 'com.tencent.mm:id/ke',
     },
     PROGRESS_BAR: {
         name: '加载框进度条',
