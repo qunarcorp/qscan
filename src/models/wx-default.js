@@ -179,7 +179,7 @@ module.exports = {
         },
         // 微信后台登录
         'backstage-publish-scan': (app, opts, cb) => {
-            logger.info('扫码类型: 微信后台');
+            logger.info('扫码类型: 发布上线');
 
             return app
                 .setImplicitWaitTimeout(waitTimeout)
@@ -189,7 +189,7 @@ module.exports = {
                 .click()
                 .elementByXPath(CONST.THE_SCAN_BTN.xpath)
                 .click()
-                .waitForElementByXPath(CONST.PUBLISH.xpath)
+                .waitForElementByXPath(CONST.PUBLISH_SCAN.xpath)
                 .click();
         }
     }

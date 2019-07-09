@@ -90,6 +90,6 @@ module.exports = {
     },
     PUBLISH_SCAN: {
         name: '通过审核上线',
-        xpath: '//android.view.View[@content-desc="确定 " or @text="确定 "]',
+        xpath: '//android.view.View[@content-desc="发布 " or @text="发布 "]',
     }
 };
