@@ -28,7 +28,10 @@
         "eslint-plugin-html": "^4.0.6",
         "ghooks": "^2.0.4",
         "markdown-it-task-lists": "^2.1.1",
-        "validate-commit-msg": "^2.14.0"
+        "validate-commit-msg": "^2.14.0",
+        "eslint-utils": ">=1.4.1",
+        "lodash": ">=4.17.13",
+        "js-yaml": ">=3.13.1"
     },
     "config": {
         "ghooks": {
