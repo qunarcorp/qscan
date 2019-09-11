@@ -3,8 +3,8 @@ const Util = require('../src/util');
 
 const q = new QScan({
     modelOpts: {
-        'wx-default': {
-            udid: '7PTS4TDAGM9DLNEU',
+        'bu-default': {
+            udid: 'd51d5015',
             port: '4723',
             opts: {
                 user: '###',
@@ -15,8 +15,8 @@ const q = new QScan({
 });
 
 q.run({
-    modelName: 'wx-default',
-    type: 'ide-login-scan'
+    modelName: 'bu-default',
+    type: 'backstage-login-scan'
 }, err => {
     console.log(err);
 });
